@@ -3,13 +3,13 @@
 #include "ui_agingtestdialog.h"
 #include <QDateTime>
 #include <QDebug>
+#include <QMessageBox>
 #include <QTimer>
 #include <cameratestdialog.h>
 #include <qeventloop.h>
 #include <qprocess.h>
 #include <qtimer.h>
 #include <sys/time.h>
-
 AgingTestDialog::AgingTestDialog(QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::AgingTestDialog)
@@ -302,6 +302,15 @@ void AgingTestDialog::stopAgingTest()
 {
     qDebug() << "stopAgingTest";
     currentTestCase = "老化测试结束";
+    QMessageBox messagebox;
+    messagebox.setText(tr("老化测试结束，是否重启设备"));
+    messagebox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+    int ret = messagebox.exec();
+    if (ret == QMessageBox::Ok) {
+        qDebug("ret==QMessageBox::OK");
+        system("sync");
+        system("reboot");
+    }
 }
 
 /**
