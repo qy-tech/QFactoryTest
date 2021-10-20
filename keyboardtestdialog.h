@@ -17,6 +17,12 @@ public:
 
 protected:
     virtual bool event(QEvent* event);
+    void keyReleaseEvent(QKeyEvent *event);
+
+private slots:
+    void on_okButton_clicked();
+
+    void on_failedButton_clicked();
 
 private:
     Ui::KeyboardTestDialog* ui;

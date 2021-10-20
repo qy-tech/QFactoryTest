@@ -23,8 +23,13 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>Printer Test</string>
+       <string>打印机</string>
       </property>
      </widget>
     </item>
@@ -36,8 +41,13 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>TP Test</string>
+       <string>触摸</string>
       </property>
      </widget>
     </item>
@@ -49,8 +59,13 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>LCD Test </string>
+       <string>屏幕显示</string>
       </property>
      </widget>
     </item>
@@ -62,8 +77,13 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>Camera Test</string>
+       <string>摄像头</string>
       </property>
      </widget>
     </item>
@@ -75,8 +95,13 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>Keyboard Test</string>
+       <string>按键</string>
       </property>
      </widget>
     </item>
@@ -88,8 +113,13 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>Battery Test</string>
+       <string>电池</string>
       </property>
      </widget>
     </item>

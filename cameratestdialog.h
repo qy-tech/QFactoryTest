@@ -32,13 +32,15 @@ public:
     static void video_packet_callback(MEDIA_BUFFER mb);
 
 protected:
-    virtual void closeEvent(QCloseEvent*) override;
+    //virtual void closeEvent(QCloseEvent*) override;
     virtual void accept() override;
     virtual void reject() override;
 
+    virtual bool event(QEvent* event) override;
+
 private:
     Ui::CameraTestDialog* ui;
-    void openCamera();
+    bool openCamera();
     void closeCamera();
 
     MPP_CHN_S stDestChn;

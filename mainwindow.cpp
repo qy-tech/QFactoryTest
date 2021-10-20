@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 
+#include "agingtestdialog.h"
 #include "batterytestdialog.h"
 #include "cameratestdialog.h"
 #include "factorytestutils.h"
@@ -8,6 +9,8 @@
 #include "printertestdialog.h"
 #include "tptestdialog.h"
 #include "ui_mainwindow.h"
+
+#define STATEFILE "/oem/FactoryTEST_OK"
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -20,41 +23,129 @@ MainWindow::MainWindow(QWidget* parent)
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete dialog;
+    //delete dialog;
 }
 
 void MainWindow::on_btn_keyboard_test_clicked()
 {
-    dialog = new KeyboardTestDialog(this);
-    dialog->show();
+    KeyboardTestDialog dialog;
+    int i = dialog.exec();
+    qDebug("KeyboardTestDialog result = %d", i);
+    setWidgetColor(ui->btn_keyboard_test, i);
+    if (i == 1) {
+        keyResult = true;
+        checkAllTestResult();
+    }
 }
 void MainWindow::on_btn_tp_test_clicked()
 {
-    dialog = new TPTestDialog(this);
-    dialog->show();
+    TPTestDialog dialog;
+    int i = dialog.exec();
+    qDebug("TPTestDialog result = %d", i);
+    setWidgetColor(ui->btn_tp_test, i);
+    if (i == 1) {
+        tpResult = true;
+        checkAllTestResult();
+    }
 }
 
 void MainWindow::on_btn_lcd_test_clicked()
 {
-    dialog = new LcdTestDialog(this);
-    dialog->show();
+    LcdTestDialog dialog;
+    int i = dialog.exec();
+    qDebug("LcdTestDialog result = %d", i);
+    setWidgetColor(ui->btn_lcd_test, i);
+    if (i == 1) {
+        lcdResult = true;
+        checkAllTestResult();
+    }
 }
 
 void MainWindow::on_btn_camera_test_clicked()
 {
-    dialog = new CameraTestDialog(this);
-    dialog->show();
+    CameraTestDialog dialog;
+    int i = dialog.exec();
+    qDebug("CameraTestDialog result = %d", i);
+    setWidgetColor(ui->btn_camera_test, i);
+    if (i == 1) {
+        cameraResult = true;
+        checkAllTestResult();
+    }
 }
 
 void MainWindow::on_btn_printer_test_clicked()
 {
-    dialog = new PrinterTestDialog(this);
-    dialog->show();
+    PrinterTestDialog dialog;
+    int i = dialog.exec();
+    qDebug("PrinterTest result = %d", i);
+    setWidgetColor(ui->btn_printer_test, i);
+    if (i == 1) {
+        printResult = true;
+        checkAllTestResult();
+    }
 }
 
 void MainWindow::on_btn_battery_test_clicked()
 {
+    BatteryTestDialog dialog;
+    int i = dialog.exec();
+    qDebug("BatteryTestDialog result = %d", i);
+    setWidgetColor(ui->btn_battery_test, i);
+    if (i == 1) {
+        batteryResult = true;
+        checkAllTestResult();
+    }
+}
 
-    dialog = new BatteryTestDialog(this);
-    dialog->show();
+void MainWindow::setWidgetColor(QPushButton* widget, int result)
+{
+    QPalette pal = widget->palette();
+    if (result == 1) {
+        pal.setColor(QPalette::Button, Qt::green);
+    } else {
+        pal.setColor(QPalette::Button, Qt::red);
+    }
+    widget->setPalette(pal);
+    widget->setAutoFillBackground(true);
+    widget->setFlat(true);
+}
+
+void MainWindow::startAgingTest()
+{
+    AgingTestDialog dialog;
+    dialog.exec();
+}
+
+void MainWindow::checkAllTestResult()
+{
+    if (tpResult && lcdResult && keyResult && batteryResult && cameraResult && printResult) {
+        qDebug("All item test OK..");
+        QFile file(STATEFILE);
+        if (!file.open(QIODevice::ReadWrite | QIODevice::Text)) {
+            qDebug("write status file failed..");
+            QMessageBox messagebox;
+            messagebox.setText(tr("保存测试状态文件失败!\n"
+                                  "请检查问题"));
+            messagebox.exec();
+        } else {
+            qDebug("write status file ..");
+            file.open(QIODevice::ReadWrite | QIODevice::Text);
+            file.write("OK");
+            file.close();
+            system("sync");
+            QMessageBox messagebox;
+            messagebox.setText(tr("全部测试成功!!!\n\n 是否进入老化测试"));
+            messagebox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+            int ret = messagebox.exec();
+            if (ret == QMessageBox::Ok) {
+                startAgingTest();
+            }else{
+                qDebug("ret==QMessageBox::OK");
+                system("sync");
+                system("reboot");
+            }
+        }
+    } else {
+        qDebug("have item test faild..");
+    }
 }

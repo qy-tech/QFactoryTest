@@ -1,7 +1,11 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QDebug>
+#include <QFile>
 #include <QMainWindow>
+#include <QMessageBox>
+#include <QPushButton>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -29,10 +33,18 @@ private slots:
 
     void on_btn_printer_test_clicked();
 
-
-
 private:
     Ui::MainWindow* ui;
-    QDialog* dialog;
+    //QDialog* dialog;
+    bool tpResult = false;
+    bool lcdResult = false;
+    bool keyResult = false;
+    bool batteryResult = false;
+    bool cameraResult = false;
+    bool printResult = false;
+
+    void checkAllTestResult();
+    void startAgingTest();
+    void setWidgetColor(QPushButton* widget, int result);
 };
 #endif // MAINWINDOW_H

@@ -15,8 +15,6 @@ KeyboardTestDialog::KeyboardTestDialog(QWidget* parent)
 {
     ui->setupUi(this);
     FactoryTestUtils::windowFullScreen(this);
-    FactoryTestUtils::moveWidgetRightBottom(ui->buttonBox);
-
     labelLists.append(ui->label_F1);
     labelLists.append(ui->label_F2);
     labelLists.append(ui->label_esc);
@@ -38,22 +36,13 @@ void KeyboardTestDialog::changeKeyStatus(QLabel* label)
             labelLists[i]->setStyleSheet(styleNormal);
         }
     }
-    //将窗口设置为顶层窗口，解决“修改了属性页面不刷新问题”
-    //raise();
-    hide();
-    show();
 }
 
-bool KeyboardTestDialog::event(QEvent* event)
-{
-    if (event->type() == QEvent::KeyPress) {
-        QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
-        qDebug() << "press key " << keyEvent->text() << "code is " << keyEvent->key() << "\n";
-
-        switch (keyEvent->key()) {
+void KeyboardTestDialog::keyReleaseEvent(QKeyEvent *event) {
+        qDebug() << "keyReleaseEvent key " << event->text() << "code is " << event->key() << "\n";
+        switch (event->key()) {
         case Qt::Key_F1: //code 59 (KEY_F1)
             qDebug("key F1 select");
-
             changeKeyStatus(ui->label_F1);
             break;
         case Qt::Key_F2: //code 60 (KEY_F2)
@@ -69,6 +58,31 @@ bool KeyboardTestDialog::event(QEvent* event)
             changeKeyStatus(ui->label_esc);
             break;
         }
+}
+
+
+bool KeyboardTestDialog::event(QEvent* event)
+{
+    if (event->type() == QEvent::KeyPress) {
+        QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
+        qDebug() << "event press key " << keyEvent->text() << "code is " << keyEvent->key() << "\n";
+        if(keyEvent->key() == Qt::Key_Escape){
+            qDebug("key Key_Escape select");
+            changeKeyStatus(ui->label_esc);
+            return true;
+        }else{
+            qDebug("key other");
+        }
     }
-    return false;
+    return QWidget::event(event);
+}
+
+void KeyboardTestDialog::on_okButton_clicked()
+{
+    accept();
+}
+
+void KeyboardTestDialog::on_failedButton_clicked()
+{
+    reject();
 }

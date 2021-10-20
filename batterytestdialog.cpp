@@ -7,6 +7,7 @@
 #include <QFile>
 #include <QString>
 #include <QThread>
+#include <QFont>
 
 BatteryTestDialog::BatteryTestDialog(QWidget* parent)
     : QDialog(parent)
@@ -15,6 +16,9 @@ BatteryTestDialog::BatteryTestDialog(QWidget* parent)
     ui->setupUi(this);
     FactoryTestUtils::windowFullScreen(this);
     FactoryTestUtils::moveWidgetRightBottom(ui->buttonBox);
+    QFont ft;
+    ft.setPointSize(25);
+    ui->label_battery->setFont(ft);
     thread = new BatteryReadThread();
     thread->setBatteryPath("/sys/class/power_supply/battery/capacity");
     thread->start();
@@ -39,6 +43,7 @@ void BatteryTestDialog::accept()
     qDebug("close battery accept");
     thread->terminate();
     close();
+    done(1);
 }
 
 void BatteryTestDialog::reject()
@@ -46,13 +51,14 @@ void BatteryTestDialog::reject()
     qDebug("close battery reject");
     thread->terminate();
     close();
+    done(0);
 }
 
 void BatteryTestDialog::updateBatteryInfo(QString batteryInfo)
 {
 
     if (batteryInfo.isEmpty()) {
-        ui->label_battery->setText(tr("ERROR"));
+        ui->label_battery->setText(tr("获取电量失败"));
     } else {
         ui->label_battery->setText(QString("%1%").arg(batteryInfo.replace("\n", "").replace(" ", "")));
     }

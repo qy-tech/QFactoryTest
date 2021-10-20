@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QPalette>
+#include <QProcess>
 #include <QSize>
 #include <QWidget>
 FactoryTestUtils::FactoryTestUtils()
@@ -25,4 +26,12 @@ void FactoryTestUtils::moveWidgetRightBottom(QWidget* widget)
 {
     widget->move(FactoryTestUtils::screenWidth * 0.95 - widget->width(),
         FactoryTestUtils::screenHeight * 0.95 - widget->height());
+}
+
+QString FactoryTestUtils::runCommand(QString cmd)
+{
+    QProcess p;
+    p.execute("bash", QStringList() << "-c" << cmd);
+    p.waitForFinished();
+    return p.readAllStandardOutput();
 }

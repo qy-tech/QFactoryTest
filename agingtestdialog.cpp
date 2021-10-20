@@ -1,46 +1,90 @@
-#include "cameratestdialog.h"
+#include "agingtestdialog.h"
 #include "factorytestutils.h"
-#include "ui_cameratestdialog.h"
-
-#include <QKeyEvent>
-#include <RgaUtils.h>
-#include <fcntl.h>
-#include <malloc.h>
-#include <rga.h>
-#include <rga/im2d.h>
-#include <rga/rga.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/ioctl.h>
-#include <sys/stat.h>
+#include "ui_agingtestdialog.h"
+#include <QDateTime>
+#include <QDebug>
+#include <QTimer>
+#include <cameratestdialog.h>
+#include <qeventloop.h>
+#include <qprocess.h>
+#include <qtimer.h>
 #include <sys/time.h>
-#include <sys/types.h>
-#include <unistd.h>
 
-CameraTestDialog::CameraTestDialog(QWidget* parent)
+AgingTestDialog::AgingTestDialog(QWidget* parent)
     : QDialog(parent)
-    , ui(new Ui::CameraTestDialog)
+    , ui(new Ui::AgingTestDialog)
 {
     ui->setupUi(this);
     FactoryTestUtils::windowFullScreen(this);
-    ui->statuLabel->setVisible(false);
-    //FactoryTestUtils::moveWidgetRightBottom(ui->buttonBox);
-    if (!openCamera()) {
-        ui->statuLabel->setVisible(true);
-    }
+    QFont font;
+    font.setPointSize(32);
+    ui->label_cpuInfo->setFont(font);
+
+    toggleCamera();
+
+    cpuInfoReadThread = new CpuInfoReadThread();
+    cpuInfoReadThread->start();
+    connect(cpuInfoReadThread, SIGNAL(updateCpuInfo(float, float)), this, SLOT(updateCpuInfo(float, float)));
 }
 
-CameraTestDialog::~CameraTestDialog()
+AgingTestDialog::~AgingTestDialog()
 {
-    //qDebug("~CameraTestDialog");
-    //closeCamera();
     delete ui;
 }
 
-bool CameraTestDialog::openCamera()
+/**
+* 视频播放老化测试
+*/
+void AgingTestDialog::playVideo()
+{
+    // 视频老化测试
+    // 记录开始测试的时间
+    startTestTime = QDateTime::currentDateTime().toSecsSinceEpoch();
+    currentTestCase = "正在执行视频播放测试";
+    videoPlayerThread = new VideoPlayerThread();
+    videoPlayerThread->start();
+    connect(videoPlayerThread, SIGNAL(onPlayCompletedListener()), this, SLOT(onVideoPlayCompleted()));
+}
+/**
+* 摄像头开关老化测试
+*/
+void AgingTestDialog::toggleCamera()
+{
+    // 开关摄像头测试
+    // 记录开始测试的时间
+    startTestTime = QDateTime::currentDateTime().toSecsSinceEpoch();
+    currentTestCase = "正在执行摄像头开关测试";
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(onCameraTimeOut()));
+    timer->start(3000);
+}
+
+/**
+* 每隔 3 秒打开或者关闭一次摄像头
+*/
+void AgingTestDialog::onCameraTimeOut()
+{
+    // 摄像头开关老化一个小时
+    if (QDateTime::currentDateTime().toSecsSinceEpoch() - startTestTime >= 3600) {
+        timer->stop();
+        closeCamera();
+        playVideo();
+        return;
+    }
+
+    if (isCameraOpen) {
+        closeCamera();
+    } else {
+        openCamera();
+    }
+}
+/**
+* 打开摄像头
+*/
+bool AgingTestDialog::openCamera()
 {
     qDebug("vo_test0");
+    isCameraOpen = true;
     s32CamId = 0; //camid: camera ctx id, Default 0\n
     RK_BOOL bMultictx = RK_FALSE;
     char* iq_file_dir = NULL;
@@ -86,7 +130,7 @@ bool CameraTestDialog::openCamera()
     stVoAttr.stImgRect.u32Height = video_height; //区域的高度
     stVoAttr.stDispRect.s32X = 0; //输出图层尺寸参数。用于vop裁剪。 RECT_S s32X:区域的X轴坐标
     stVoAttr.stDispRect.s32Y = 0; //区域的Y轴坐标
-    stVoAttr.stDispRect.u32Width = 640; //区域的宽度
+    stVoAttr.stDispRect.u32Width = 800; //区域的宽度
     stVoAttr.stDispRect.u32Height = 480; //区域的高度
     ret = RK_MPI_VO_CreateChn(0, &stVoAttr); //创建VO通道。
     if (ret) {
@@ -168,9 +212,13 @@ bool CameraTestDialog::openCamera()
     return true;
 }
 
-void CameraTestDialog::closeCamera()
+/**
+* 关闭摄像头
+*/
+void AgingTestDialog::closeCamera()
 {
     qDebug("closeCamera");
+    isCameraOpen = false;
     int ret;
     stSrcChn.enModId = RK_ID_VI;
     stSrcChn.s32ChnId = 0;
@@ -191,49 +239,107 @@ void CameraTestDialog::closeCamera()
     RK_MPI_VI_DisableChn(s32CamId, 0);
 }
 
-bool CameraTestDialog::event(QEvent* event)
+/**
+* 执行老化测试
+*/
+void AgingTestDialog::stressapptest()
 {
-    if (event->type() == QEvent::KeyPress) {
-        QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
-        if (keyEvent->key() == 0x10000B7) {
-            qDebug("receive power key close camera");
-            closeCamera();
-        }
+    currentTestCase = "正在执行压力测试";
+    stressTestThread = new StressTestThread();
+    stressTestThread->start();
+    connect(stressTestThread, SIGNAL(stressTestCompleted()), this, SLOT(onStressTestCompleted()));
+}
+
+void AgingTestDialog::closeEvent(QCloseEvent*)
+{
+}
+
+void AgingTestDialog::accept()
+{
+    qDebug() << "AgingTestDialog accept";
+
+    stopAgingTest();
+    if (cpuInfoReadThread != NULL && cpuInfoReadThread->isRunning()) {
+        cpuInfoReadThread->terminate();
+        qDebug() << "stop cpuInfoReadThread";
     }
-    return false;
+    if (videoPlayerThread != NULL && videoPlayerThread->isRunning()) {
+        qDebug() << "stop videoPlayerThread";
+        videoPlayerThread->terminate();
+    }
+    if (stressTestThread != NULL && stressTestThread->isRunning()) {
+        qDebug() << "stop stressTestThread";
+        stressTestThread->terminate();
+    }
+    close();
 }
-void CameraTestDialog::accept()
-{
-    qDebug("CameraTestDialog accept");
-    closeCamera();
-    done(1);
-}
-void CameraTestDialog::reject()
-{
-    qDebug("CameraTestDialog reject");
-    closeCamera();
-    done(0);
-}
-void CameraTestDialog::video_packet_callback(MEDIA_BUFFER mb)
-{
-    //    static RK_U32 jpeg_id = 0;
-    //    printf("Get JPEG packet[%d]:ptr:%p, fd:%d, size:%zu, mode:%d, channel:%d, "
-    //           "timestamp:%lld\n",
-    //        jpeg_id, RK_MPI_MB_GetPtr(mb), RK_MPI_MB_GetFD(mb),
-    //        RK_MPI_MB_GetSize(mb), RK_MPI_MB_GetModeID(mb),
-    //        RK_MPI_MB_GetChannelID(mb), RK_MPI_MB_GetTimestamp(mb));
 
-    //    char jpeg_path[128];
-    //    sprintf(jpeg_path, "/tmp/test_jpeg%d.jpeg", jpeg_id);
-    //    printf("jpeg_path = %s\n", jpeg_path);
-    //    Widget::photoPath = QString::fromUtf8(jpeg_path);
-    //    FILE* file = fopen(jpeg_path, "w");
-    //    if (file) {
-    //        fwrite(RK_MPI_MB_GetPtr(mb), 1, RK_MPI_MB_GetSize(mb), file);
-    //        fclose(file);
-    //    }
+void AgingTestDialog::reject()
+{
+    qDebug() << "AgingTestDialog reject";
 
-    //    RK_MPI_MB_ReleaseBuffer(mb);
-    //    jpeg_id++;
-    //    emit MyPointer->capturedSignal(Widget::photoPath);
+    stopAgingTest();
+    if (cpuInfoReadThread != NULL && cpuInfoReadThread->isRunning()) {
+        cpuInfoReadThread->terminate();
+        qDebug() << "stop cpuInfoReadThread";
+    }
+
+    if (videoPlayerThread != NULL && videoPlayerThread->isRunning()) {
+        qDebug() << "stop videoPlayerThread";
+        videoPlayerThread->terminate();
+    }
+    if (stressTestThread != NULL && stressTestThread->isRunning()) {
+        qDebug() << "stop stressTestThread";
+        stressTestThread->terminate();
+    }
+    close();
+}
+
+/**
+* 退出老化测试
+*/
+void AgingTestDialog::stopAgingTest()
+{
+    qDebug() << "stopAgingTest";
+    currentTestCase = "老化测试结束";
+}
+
+/**
+* 刷新界面上的温度和 CPU 频率信息
+*/
+void AgingTestDialog::updateCpuInfo(float temp, float cpuFreq)
+{
+    qDebug() << "temp is" << temp << "cpu freq is " << cpuFreq;
+    ui->label_cpuInfo->setText(QString("%1\n温度：%2摄氏度\nCPU频率：%3Mhz").arg(currentTestCase).arg(temp).arg(cpuFreq));
+}
+
+/**
+* 每次视频播放完成的回调
+*/
+void AgingTestDialog::onVideoPlayCompleted()
+{
+    // 播放视频一个小时
+    if (QDateTime::currentDateTime().toSecsSinceEpoch() - startTestTime >= 3600) {
+        if (videoPlayerThread != NULL) {
+            videoPlayerThread->terminate();
+        }
+
+        stressapptest();
+    }
+}
+
+/**
+* 压力测试完成回调
+*/
+void AgingTestDialog::onStressTestCompleted()
+{
+    // 压力测试完成
+    stopAgingTest();
+}
+
+/**
+* 摄像头数据回调
+*/
+void AgingTestDialog::video_packet_callback(MEDIA_BUFFER)
+{
 }

@@ -24,7 +24,7 @@ QByteArray BatteryReadThread::updateBatteryInfo()
     if (file.exists() && file.open(QIODevice::ReadOnly)) {
         content = file.readAll();
     }
-    qDebug() << "batter info is %s" << content;
+    qDebug() << "batter info is" << content;
 
     file.close();
     return content;

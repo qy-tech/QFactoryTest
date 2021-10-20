@@ -16,27 +16,36 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    agingtestdialog.cpp \
     batteryreadthread.cpp \
     batterytestdialog.cpp \
     cameratestdialog.cpp \
+    cpuinforeadthread.cpp \
     factorytestutils.cpp \
     keyboardtestdialog.cpp \
     lcdtestdialog.cpp \
     main.cpp \
     mainwindow.cpp \
     printertestdialog.cpp \
+    printthread.cpp \
+    stresstestthread.cpp \
     tptestdialog.cpp \
-    sample_common_isp.c
+    sample_common_isp.c \
+    videoplayerthread.cpp
 
 HEADERS += \
+    agingtestdialog.h \
     batteryreadthread.h \
     batterytestdialog.h \
     cameratestdialog.h \
+    cpuinforeadthread.h \
     factorytestutils.h \
     keyboardtestdialog.h \
     lcdtestdialog.h \
     mainwindow.h \
     printertestdialog.h \
+    printthread.h \
+    stresstestthread.h \
     tptestdialog.h \
     sample_common.h \
     rkmedia/rkmedia_adec.h \
@@ -55,9 +64,11 @@ HEADERS += \
     rkmedia/rkmedia_venc.h \
     rkmedia/rkmedia_vi.h \
     rkmedia/rkmedia_vmix.h \
-    rkmedia/rkmedia_vo.h
+    rkmedia/rkmedia_vo.h \
+    videoplayerthread.h
 
 FORMS += \
+    agingtestdialog.ui \
     batterytestdialog.ui \
     cameratestdialog.ui \
     keyboardtestdialog.ui \

@@ -2,6 +2,7 @@
 #define PRINTERTESTDIALOG_H
 
 #include <QDialog>
+#include "printthread.h"
 
 #define PICW 672
 #define PICH 384
@@ -27,14 +28,21 @@ public:
 
 private slots:
     void on_btnPrinter_clicked();
+    void on_okButton_clicked();
+    void on_failedButton_clicked();
+
+public slots:
+    void nopaperSlot();
+    void errorSlot();
+    void finishedSlot();
 
 private:
     Ui::PrinterTestDialog* ui;
 
     QString printerPath = "/dev/printer_device_node";
 
-    void printerTest();
-    bool toGray();
+    //bool printerTest();
+    //bool toGray();
 
     float matriPicGlobal[PICH][PICW];
     float matriPicDealGlobal[PICH][PICW];
@@ -43,6 +51,11 @@ private:
     int qimageRGB[PICH][PICW][3];
     uint8_t dotBuffer[PICW][PICH];
     int fd;
+
+    bool printRunningFlag=false;
+    bool printTestResult=false;
+
+    PrintThread *th_print;
 };
 
 #endif // PRINTERTESTDIALOG_H

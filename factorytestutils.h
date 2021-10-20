@@ -15,6 +15,7 @@ public:
     static int screenWidth;
     static int screenHeight;
     static QString imagePath;
+    static QString runCommand(QString cmd);
 };
 
 #endif // FACTORYTESTUTILS_H
