@@ -11,7 +11,7 @@ public:
     void setBatteryPath(QString path);
 
 private:
-    QString batteryPath = tr("/sys/class/power_supply/battery/capacity");
+    QString batteryPath = tr("/sys/class/power_supply/rk-bat/capacity");
     QByteArray updateBatteryInfo();
 
 signals:

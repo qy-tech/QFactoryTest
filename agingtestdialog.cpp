@@ -10,6 +10,7 @@
 #include <qprocess.h>
 #include <qtimer.h>
 #include <sys/time.h>
+
 AgingTestDialog::AgingTestDialog(QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::AgingTestDialog)
@@ -20,8 +21,10 @@ AgingTestDialog::AgingTestDialog(QWidget* parent)
     font.setPointSize(32);
     ui->label_cpuInfo->setFont(font);
 
+    totalTestTime = 0;
     toggleCamera();
-
+    //playVideo();
+    //stressapptest();
     cpuInfoReadThread = new CpuInfoReadThread();
     cpuInfoReadThread->start();
     connect(cpuInfoReadThread, SIGNAL(updateCpuInfo(float, float)), this, SLOT(updateCpuInfo(float, float)));
@@ -39,6 +42,7 @@ void AgingTestDialog::playVideo()
 {
     // 视频老化测试
     // 记录开始测试的时间
+    isAgingTestRunning = true;
     startTestTime = QDateTime::currentDateTime().toSecsSinceEpoch();
     currentTestCase = "正在执行视频播放测试";
     videoPlayerThread = new VideoPlayerThread();
@@ -52,6 +56,7 @@ void AgingTestDialog::toggleCamera()
 {
     // 开关摄像头测试
     // 记录开始测试的时间
+    isAgingTestRunning = true;
     startTestTime = QDateTime::currentDateTime().toSecsSinceEpoch();
     currentTestCase = "正在执行摄像头开关测试";
     timer = new QTimer(this);
@@ -65,7 +70,7 @@ void AgingTestDialog::toggleCamera()
 void AgingTestDialog::onCameraTimeOut()
 {
     // 摄像头开关老化一个小时
-    if (QDateTime::currentDateTime().toSecsSinceEpoch() - startTestTime >= 3600) {
+    if (QDateTime::currentDateTime().toSecsSinceEpoch() - startTestTime >= 4680) {
         timer->stop();
         closeCamera();
         playVideo();
@@ -244,6 +249,7 @@ void AgingTestDialog::closeCamera()
 */
 void AgingTestDialog::stressapptest()
 {
+    isAgingTestRunning = true;
     currentTestCase = "正在执行压力测试";
     stressTestThread = new StressTestThread();
     stressTestThread->start();
@@ -301,6 +307,7 @@ void AgingTestDialog::reject()
 void AgingTestDialog::stopAgingTest()
 {
     qDebug() << "stopAgingTest";
+    isAgingTestRunning = false;
     currentTestCase = "老化测试结束";
     QMessageBox messagebox;
     messagebox.setText(tr("老化测试结束，是否重启设备"));
@@ -318,17 +325,50 @@ void AgingTestDialog::stopAgingTest()
 */
 void AgingTestDialog::updateCpuInfo(float temp, float cpuFreq)
 {
-    qDebug() << "temp is" << temp << "cpu freq is " << cpuFreq;
-    ui->label_cpuInfo->setText(QString("%1\n温度：%2摄氏度\nCPU频率：%3Mhz").arg(currentTestCase).arg(temp).arg(cpuFreq));
+    //qDebug() << "temp is" << temp << "cpu freq is " << cpuFreq;
+    if (isAgingTestRunning) {
+        totalTestTime += 1;
+        ui->label_cpuInfo->setText(QString("%1\n温度：%2摄氏度\nCPU频率：%3Mhz\n已运行老化测试%4")
+                                       .arg(currentTestCase)
+                                       .arg(temp)
+                                       .arg(cpuFreq)
+                                       .arg(formatTime(totalTestTime * 1000)));
+
+    } else {
+        totalTestTime = 0;
+        ui->label_cpuInfo->setText(QString("%1\n温度：%2摄氏度\nCPU频率：%3Mhz").arg(currentTestCase).arg(temp).arg(cpuFreq));
+    }
 }
 
+QString AgingTestDialog::formatTime(int ms)
+{
+    int ss = 1000;
+    int mi = ss * 60;
+    int hh = mi * 60;
+    int dd = hh * 24;
+
+    long day = ms / dd;
+    long hour = (ms - day * dd) / hh;
+    long minute = (ms - day * dd - hour * hh) / mi;
+    long second = (ms - day * dd - hour * hh - minute * mi) / ss;
+    long milliSecond = ms - day * dd - hour * hh - minute * mi - second * ss;
+
+    QString hou = QString::number(hour, 10);
+    QString min = QString::number(minute, 10);
+    QString sec = QString::number(second, 10);
+    QString msec = QString::number(milliSecond, 10);
+
+    //qDebug() << "minute:" << min << "second" << sec << "ms" << msec <<endl;
+
+    return hou + "时" + min + "分" + sec + "秒";
+}
 /**
 * 每次视频播放完成的回调
 */
 void AgingTestDialog::onVideoPlayCompleted()
 {
     // 播放视频一个小时
-    if (QDateTime::currentDateTime().toSecsSinceEpoch() - startTestTime >= 3600) {
+    if (QDateTime::currentDateTime().toSecsSinceEpoch() - startTestTime >= 4680) {
         if (videoPlayerThread != NULL) {
             videoPlayerThread->terminate();
         }

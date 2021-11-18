@@ -49,8 +49,12 @@ private:
     bool openCamera();
     void closeCamera();
 
+    QString formatTime(int ms);
+
     bool isCameraOpen = false;
     int startTestTime = 0;
+    int totalTestTime = 0;
+    bool isAgingTestRunning = false;
 
     MPP_CHN_S stDestChn;
     MPP_CHN_S stSrcChn;

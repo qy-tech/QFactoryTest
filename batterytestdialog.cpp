@@ -20,7 +20,7 @@ BatteryTestDialog::BatteryTestDialog(QWidget* parent)
     ft.setPointSize(25);
     ui->label_battery->setFont(ft);
     thread = new BatteryReadThread();
-    thread->setBatteryPath("/sys/class/power_supply/battery/capacity");
+    thread->setBatteryPath("/sys/class/power_supply/rk-bat/capacity");
     thread->start();
     //接收读取的值
     connect(thread, SIGNAL(batteryChanged(QString)), this, SLOT(updateBatteryInfo(QString)));
