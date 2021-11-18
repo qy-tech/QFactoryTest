@@ -33,6 +33,8 @@ private slots:
 
     void on_btn_printer_test_clicked();
 
+    void on_btn_rtc_test_clicked();
+
 private:
     Ui::MainWindow* ui;
     //QDialog* dialog;
@@ -40,6 +42,7 @@ private:
     bool lcdResult = false;
     bool keyResult = false;
     bool batteryResult = false;
+    bool rtcResult = false;
     bool cameraResult = false;
     bool printResult = false;
 

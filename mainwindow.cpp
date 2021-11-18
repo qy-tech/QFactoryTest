@@ -7,6 +7,7 @@
 #include "keyboardtestdialog.h"
 #include "lcdtestdialog.h"
 #include "printertestdialog.h"
+#include "timetestdialog.h"
 #include "tptestdialog.h"
 #include "ui_mainwindow.h"
 
@@ -23,7 +24,7 @@ MainWindow::MainWindow(QWidget* parent)
 MainWindow::~MainWindow()
 {
     delete ui;
-    //delete dialog;
+    // delete dialog;
 }
 
 void MainWindow::on_btn_keyboard_test_clicked()
@@ -97,6 +98,18 @@ void MainWindow::on_btn_battery_test_clicked()
     }
 }
 
+void MainWindow::on_btn_rtc_test_clicked()
+{
+    TimeTestDialog dialog;
+    int result = dialog.exec();
+    qDebug() << "rtc test result " << result;
+    setWidgetColor(ui->btn_rtc_test, result);
+    if (result == 1) {
+        rtcResult = true;
+        checkAllTestResult();
+    }
+}
+
 void MainWindow::setWidgetColor(QPushButton* widget, int result)
 {
     QPalette pal = widget->palette();
@@ -118,7 +131,7 @@ void MainWindow::startAgingTest()
 
 void MainWindow::checkAllTestResult()
 {
-    if (tpResult && lcdResult && keyResult && batteryResult && cameraResult && printResult) {
+    if (tpResult && lcdResult && keyResult && batteryResult && cameraResult && printResult && rtcResult) {
         qDebug("All item test OK..");
         QFile file(STATEFILE);
         if (!file.open(QIODevice::ReadWrite | QIODevice::Text)) {
@@ -139,7 +152,7 @@ void MainWindow::checkAllTestResult()
             int ret = messagebox.exec();
             if (ret == QMessageBox::Ok) {
                 startAgingTest();
-            }else{
+            } else {
                 qDebug("ret==QMessageBox::OK");
                 system("sync");
                 system("reboot");

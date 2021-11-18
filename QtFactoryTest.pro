@@ -32,6 +32,7 @@ SOURCES += \
     printertestdialog.cpp \
     printthread.cpp \
     stresstestthread.cpp \
+    timetestdialog.cpp \
     tptestdialog.cpp \
     sample_common_isp.c \
     videoplayerthread.cpp
@@ -49,6 +50,7 @@ HEADERS += \
     printertestdialog.h \
     printthread.h \
     stresstestthread.h \
+    timetestdialog.h \
     tptestdialog.h \
     sample_common.h \
     rkmedia/rkmedia_adec.h \
@@ -78,6 +80,7 @@ FORMS += \
     lcdtestdialog.ui \
     mainwindow.ui \
     printertestdialog.ui \
+    timetestdialog.ui \
     tptestdialog.ui
 
 INCLUDEPATH += ../../host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/rkaiq/uAPI \
