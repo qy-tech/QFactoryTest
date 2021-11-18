@@ -42,4 +42,4 @@ typedef struct rkVMIX_LINE_INFO_S {
 }
 #endif
 
-#endif // #ifndef __RKMEDIA_VIDEO_MIX_
+#endif  // #ifndef __RKMEDIA_VIDEO_MIX_

@@ -9,13 +9,13 @@ extern "C" {
 #include "rkmedia_common.h"
 typedef struct rkAENC_ATTR_AAC_S {
   RK_U32 u32Channels;
-  RK_U32 u32SampleRate; // 96000, 88200, 64000, 48000, 44100, 32000,
-                        // 24000, 22050, 16000, 12000, 11025, 8000, 7350
+  RK_U32 u32SampleRate;  // 96000, 88200, 64000, 48000, 44100, 32000,
+                         // 24000, 22050, 16000, 12000, 11025, 8000, 7350
 } AENC_ATTR_AAC_S;
 
 typedef struct rkAENC_ATTR_MP2_S {
   RK_U32 u32Channels;
-  RK_U32 u32SampleRate; // 44100, 48000,  32000, 22050, 24000, 16000, 0
+  RK_U32 u32SampleRate;  // 44100, 48000,  32000, 22050, 24000, 16000, 0
 } AENC_ATTR_MP2_S;
 
 typedef struct rkAENC_ATTR_G711A_S {
@@ -51,4 +51,4 @@ typedef struct rkAENC_CHN_ATTR_S {
 #ifdef __cplusplus
 }
 #endif
-#endif // #ifndef __RKMEDIA_AENC_
+#endif  // #ifndef __RKMEDIA_AENC_

@@ -15,7 +15,7 @@
 namespace easymedia {
 
 class LockMutex {
-public:
+ public:
   LockMutex();
   virtual ~LockMutex();
   virtual void lock() = 0;
@@ -25,33 +25,33 @@ public:
   void locktimeinc();
   void locktimedec();
 #ifndef NDEBUG
-protected:
+ protected:
   std::atomic_int lock_times;
 #endif
 };
 
 class NonLockMutex : public LockMutex {
-public:
+ public:
   virtual ~NonLockMutex() = default;
   virtual void lock() {}
   virtual void unlock() {}
 };
 
 class ConditionLockMutex : public LockMutex {
-public:
+ public:
   virtual ~ConditionLockMutex() = default;
   virtual void lock() override;
   virtual void unlock() override;
   virtual void wait() override;
   virtual void notify() override;
 
-private:
+ private:
   std::mutex mtx;
   std::condition_variable_any cond;
 };
 
 class ReadWriteLockMutex : public LockMutex {
-public:
+ public:
   ReadWriteLockMutex();
   virtual ~ReadWriteLockMutex();
   virtual void lock() override;
@@ -60,33 +60,33 @@ public:
 
   bool valid;
 
-private:
+ private:
   // if c++17, std::shared_mutex
   pthread_rwlock_t rwlock;
 };
 
 class SpinLockMutex : public LockMutex {
-public:
+ public:
   SpinLockMutex();
   virtual ~SpinLockMutex() = default;
-  SpinLockMutex(const SpinLockMutex &) = delete;
-  SpinLockMutex &operator=(const SpinLockMutex &) = delete;
+  SpinLockMutex(const SpinLockMutex&) = delete;
+  SpinLockMutex& operator=(const SpinLockMutex&) = delete;
   virtual void lock() override;
   virtual void unlock() override;
 
-private:
+ private:
   std::atomic_flag flag;
 };
 
 class AutoLockMutex {
-public:
-  AutoLockMutex(LockMutex &lm) : m_lm(lm) { m_lm.lock(); }
+ public:
+  AutoLockMutex(LockMutex& lm) : m_lm(lm) { m_lm.lock(); }
   ~AutoLockMutex() { m_lm.unlock(); }
 
-private:
-  LockMutex &m_lm;
+ private:
+  LockMutex& m_lm;
 };
 
-} // namespace easymedia
+}  // namespace easymedia
 
-#endif // #ifndef EASYMEDIA_LOCK_H_
+#endif  // #ifndef EASYMEDIA_LOCK_H_

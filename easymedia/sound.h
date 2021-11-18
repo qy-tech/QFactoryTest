@@ -84,17 +84,17 @@ typedef struct rkVQE_CONFIG_S {
 }
 #endif
 
-_API const char *SampleFmtToString(SampleFormat fmt);
-_API SampleFormat StringToSampleFmt(const char *fmt_str);
-_API bool SampleInfoIsValid(const SampleInfo &sample_info);
-_API size_t GetSampleSize(const SampleInfo &sample_info);
+_API const char* SampleFmtToString(SampleFormat fmt);
+_API SampleFormat StringToSampleFmt(const char* fmt_str);
+_API bool SampleInfoIsValid(const SampleInfo& sample_info);
+_API size_t GetSampleSize(const SampleInfo& sample_info);
 
 #include <map>
 #include <string>
 namespace easymedia {
-bool ParseSampleInfoFromMap(std::map<std::string, std::string> &params,
-                            SampleInfo &si);
-std::string _API to_param_string(const SampleInfo &si);
-} // namespace easymedia
+bool ParseSampleInfoFromMap(std::map<std::string, std::string>& params,
+                            SampleInfo& si);
+std::string _API to_param_string(const SampleInfo& si);
+}  // namespace easymedia
 
-#endif // #ifndef EASYMEDIA_SOUND_H_
+#endif  // #ifndef EASYMEDIA_SOUND_H_

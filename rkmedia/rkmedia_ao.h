@@ -8,7 +8,7 @@ extern "C" {
 #endif
 #include "rkmedia_common.h"
 typedef struct rkAO_CHN_ATTR_S {
-  RK_CHAR *pcAudioNode;
+  RK_CHAR* pcAudioNode;
   SAMPLE_FORMAT_E enSampleFormat;
   RK_U32 u32Channels;
   RK_U32 u32SampleRate;
@@ -34,4 +34,4 @@ typedef struct rkAO_CHN_STATE_S {
 #ifdef __cplusplus
 }
 #endif
-#endif // #ifndef __RKMEDIA_AO_
+#endif  // #ifndef __RKMEDIA_AO_

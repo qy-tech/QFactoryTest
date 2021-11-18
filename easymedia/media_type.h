@@ -60,14 +60,14 @@ enum class Type { None = -1, Audio = 0, Image, Video, Text };
 #define AUDIO_PCM_S32P "audio:pcm_s32p"
 #define AUDIO_PCM_FLTP "audio:pcm_fltp"
 
-#define AUDIO_PCM                                                              \
-  TYPENEAR(AUDIO_PCM_U8)                                                       \
-  TYPENEAR(AUDIO_PCM_S16)                                                      \
-  TYPENEAR(AUDIO_PCM_S32)                                                      \
-  TYPENEAR(AUDIO_PCM_FLT)                                                      \
-  TYPENEAR(AUDIO_PCM_U8P)                                                      \
-  TYPENEAR(AUDIO_PCM_S16P)                                                     \
-  TYPENEAR(AUDIO_PCM_S32P)                                                     \
+#define AUDIO_PCM          \
+  TYPENEAR(AUDIO_PCM_U8)   \
+  TYPENEAR(AUDIO_PCM_S16)  \
+  TYPENEAR(AUDIO_PCM_S32)  \
+  TYPENEAR(AUDIO_PCM_FLT)  \
+  TYPENEAR(AUDIO_PCM_U8P)  \
+  TYPENEAR(AUDIO_PCM_S16P) \
+  TYPENEAR(AUDIO_PCM_S32P) \
   TYPENEAR(AUDIO_PCM_FLTP)
 
 #define AUDIO_AAC "audio:aac"
@@ -114,22 +114,22 @@ typedef enum {
   CODEC_TYPE_NB
 } CodecType;
 
-__attribute__((visibility("default"))) const char *
-CodecTypeToString(CodecType fmt);
-__attribute__((visibility("default"))) CodecType
-StringToCodecType(const char *fmt_str);
+__attribute__((visibility("default"))) const char* CodecTypeToString(
+    CodecType fmt);
+__attribute__((visibility("default"))) CodecType StringToCodecType(
+    const char* fmt_str);
 
 #include <string>
 
 namespace easymedia {
 
-Type StringToDataType(const char *data_type);
+Type StringToDataType(const char* data_type);
 
 class SupportMediaTypes {
-public:
+ public:
   std::string types;
 };
 
-} // namespace easymedia
+}  // namespace easymedia
 
-#endif // #ifndef EASYMEDIA_MEDIA_TYPE_H_
+#endif  // #ifndef EASYMEDIA_MEDIA_TYPE_H_

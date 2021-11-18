@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-#include "sample_common.h"
 #include <assert.h>
 #include <fcntl.h>
 #include <pthread.h>
@@ -14,8 +12,10 @@
 #include <time.h>
 #include <unistd.h>
 
+#include "sample_common.h"
+
 #define MAX_AIQ_CTX 4
-static rk_aiq_sys_ctx_t *g_aiq_ctx[MAX_AIQ_CTX];
+static rk_aiq_sys_ctx_t* g_aiq_ctx[MAX_AIQ_CTX];
 static pthread_mutex_t aiq_ctx_mutex[MAX_AIQ_CTX] = {
     PTHREAD_MUTEX_INITIALIZER, PTHREAD_MUTEX_INITIALIZER,
     PTHREAD_MUTEX_INITIALIZER, PTHREAD_MUTEX_INITIALIZER};
@@ -73,7 +73,7 @@ typedef enum rk_HDR_MODE_E {
 } HDR_MODE_E;
 
 RK_S32 SAMPLE_COMM_ISP_Init(RK_S32 CamId, rk_aiq_working_mode_t WDRMode,
-                            RK_BOOL MultiCam, const char *iq_file_dir) {
+                            RK_BOOL MultiCam, const char* iq_file_dir) {
   if (CamId >= MAX_AIQ_CTX) {
     printf("%s : CamId is over 3\n", __FUNCTION__);
     return -1;
@@ -92,7 +92,7 @@ RK_S32 SAMPLE_COMM_ISP_Init(RK_S32 CamId, rk_aiq_working_mode_t WDRMode,
   snprintf(hdr_str, sizeof(hdr_str), "%d", (int)WDRMode);
   setenv("HDR_MODE", hdr_str, 1);
 
-  rk_aiq_sys_ctx_t *aiq_ctx;
+  rk_aiq_sys_ctx_t* aiq_ctx;
   rk_aiq_static_info_t aiq_static_info;
   rk_aiq_uapi_sysctl_enumStaticMetas(CamId, &aiq_static_info);
 
@@ -101,8 +101,7 @@ RK_S32 SAMPLE_COMM_ISP_Init(RK_S32 CamId, rk_aiq_working_mode_t WDRMode,
 
   aiq_ctx = rk_aiq_uapi_sysctl_init(aiq_static_info.sensor_info.sensor_name,
                                     iq_file_dir, NULL, NULL);
-  if (MultiCam)
-    rk_aiq_uapi_sysctl_setMulCamConc(aiq_ctx, true);
+  if (MultiCam) rk_aiq_uapi_sysctl_setMulCamConc(aiq_ctx, true);
 
   g_aiq_ctx[CamId] = aiq_ctx;
   return 0;
@@ -156,7 +155,7 @@ RK_S32 SAMPLE_COMM_ISP_Run(RK_S32 CamId) {
 }
 
 RK_S32 SAMPLE_COMM_ISP_DumpExpInfo(RK_S32 CamId,
-                                    rk_aiq_working_mode_t WDRMode) {
+                                   rk_aiq_working_mode_t WDRMode) {
   if (CamId >= MAX_AIQ_CTX || !g_aiq_ctx[CamId]) {
     printf("%s : CamId is over 3 or not init\n", __FUNCTION__);
     return -1;
@@ -175,8 +174,9 @@ RK_S32 SAMPLE_COMM_ISP_DumpExpInfo(RK_S32 CamId,
             stExpInfo.CurExpInfo.LinearExp.exp_real_params.analog_gain,
             stExpInfo.MeanLuma, stCCT.CCT);
   } else {
-    sprintf(aStr, "S:%.0f-%.1f M:%.0f-%.1f L:%.0f-%.1f SLM:%.1f MLM:%.1f "
-                  "LLM:%.1f CT:%.1f",
+    sprintf(aStr,
+            "S:%.0f-%.1f M:%.0f-%.1f L:%.0f-%.1f SLM:%.1f MLM:%.1f "
+            "LLM:%.1f CT:%.1f",
             stExpInfo.CurExpInfo.HdrExp[0].exp_real_params.integration_time *
                 1000 * 1000,
             stExpInfo.CurExpInfo.HdrExp[0].exp_real_params.analog_gain,
@@ -224,7 +224,7 @@ RK_S32 SAMPLE_COMM_ISP_SetLDCHLevel(RK_S32 CamId, RK_U32 level) {
 
 /*only support switch between HDR and normal*/
 RK_S32 SAMPLE_COMM_ISP_SetWDRModeDyn(RK_S32 CamId,
-                                      rk_aiq_working_mode_t WDRMode) {
+                                     rk_aiq_working_mode_t WDRMode) {
   if (CamId >= MAX_AIQ_CTX || !g_aiq_ctx[CamId]) {
     printf("%s : CamId is over 3 or not init\n", __FUNCTION__);
     return -1;
@@ -242,7 +242,7 @@ RK_S32 SAMPLE_COMM_ISP_SET_Brightness(RK_S32 CamId, RK_U32 value) {
   RK_S32 ret = 0;
   pthread_mutex_lock(&aiq_ctx_mutex[CamId]);
   if (g_aiq_ctx[CamId]) {
-    ret = rk_aiq_uapi_setBrightness(g_aiq_ctx[CamId], value); // value[0,255]
+    ret = rk_aiq_uapi_setBrightness(g_aiq_ctx[CamId], value);  // value[0,255]
   }
   pthread_mutex_unlock(&aiq_ctx_mutex[CamId]);
   return ret;
@@ -256,7 +256,7 @@ RK_S32 SAMPLE_COMM_ISP_SET_Contrast(RK_S32 CamId, RK_U32 value) {
   RK_S32 ret = 0;
   pthread_mutex_lock(&aiq_ctx_mutex[CamId]);
   if (g_aiq_ctx[CamId]) {
-    ret = rk_aiq_uapi_setContrast(g_aiq_ctx[CamId], value); // value[0,255]
+    ret = rk_aiq_uapi_setContrast(g_aiq_ctx[CamId], value);  // value[0,255]
   }
   pthread_mutex_unlock(&aiq_ctx_mutex[CamId]);
   return ret;
@@ -270,7 +270,7 @@ RK_S32 SAMPLE_COMM_ISP_SET_Saturation(RK_S32 CamId, RK_U32 value) {
   RK_S32 ret = 0;
   pthread_mutex_lock(&aiq_ctx_mutex[CamId]);
   if (g_aiq_ctx[CamId]) {
-    ret = rk_aiq_uapi_setSaturation(g_aiq_ctx[CamId], value); // value[0,255]
+    ret = rk_aiq_uapi_setSaturation(g_aiq_ctx[CamId], value);  // value[0,255]
   }
   pthread_mutex_unlock(&aiq_ctx_mutex[CamId]);
   return ret;
@@ -286,14 +286,14 @@ RK_S32 SAMPLE_COMM_ISP_SET_Sharpness(RK_S32 CamId, RK_U32 value) {
   pthread_mutex_lock(&aiq_ctx_mutex[CamId]);
   if (g_aiq_ctx[CamId]) {
     ret = rk_aiq_uapi_setSharpness(g_aiq_ctx[CamId],
-                             level); // value[0,255]->level[0,100]
+                                   level);  // value[0,255]->level[0,100]
   }
   pthread_mutex_unlock(&aiq_ctx_mutex[CamId]);
   return ret;
 }
 
 RK_S32 SAMPLE_COMM_ISP_SET_ManualExposureAutoGain(RK_S32 CamId,
-                                                   RK_U32 u32Shutter) {
+                                                  RK_U32 u32Shutter) {
   if (CamId >= MAX_AIQ_CTX || !g_aiq_ctx[CamId]) {
     printf("%s : CamId is over 3 or not init\n", __FUNCTION__);
     return -1;
@@ -324,8 +324,8 @@ RK_S32 SAMPLE_COMM_ISP_SET_ManualExposureAutoGain(RK_S32 CamId,
 }
 
 RK_S32 SAMPLE_COMM_ISP_SET_ManualExposureManualGain(RK_S32 CamId,
-                                                     RK_U32 u32Shutter,
-                                                     RK_U32 u32Gain) {
+                                                    RK_U32 u32Shutter,
+                                                    RK_U32 u32Gain) {
   if (CamId >= MAX_AIQ_CTX || !g_aiq_ctx[CamId]) {
     printf("%s : CamId is over 3 or not init\n", __FUNCTION__);
     return -1;
@@ -381,15 +381,16 @@ RK_S32 SAMPLE_COMM_ISP_SET_AutoExposure(RK_S32 CamId) {
 }
 
 RK_S32 SAMPLE_COMM_ISP_SET_Exposure(RK_S32 CamId, RK_BOOL bIsAutoExposure,
-                                     RK_U32 bIsAGC, RK_U32 u32ElectronicShutter,
-                                     RK_U32 u32Agc) {
+                                    RK_U32 bIsAGC, RK_U32 u32ElectronicShutter,
+                                    RK_U32 u32Agc) {
   RK_S32 ret = 0;
   if (!bIsAutoExposure) {
     if (bIsAGC) {
-      ret = SAMPLE_COMM_ISP_SET_ManualExposureAutoGain(CamId, u32ElectronicShutter);
+      ret = SAMPLE_COMM_ISP_SET_ManualExposureAutoGain(CamId,
+                                                       u32ElectronicShutter);
     } else {
-      ret = SAMPLE_COMM_ISP_SET_ManualExposureManualGain(CamId, u32ElectronicShutter,
-                                                   u32Agc);
+      ret = SAMPLE_COMM_ISP_SET_ManualExposureManualGain(
+          CamId, u32ElectronicShutter, u32Agc);
     }
   } else {
     ret = SAMPLE_COMM_ISP_SET_AutoExposure(CamId);
@@ -398,7 +399,7 @@ RK_S32 SAMPLE_COMM_ISP_SET_Exposure(RK_S32 CamId, RK_BOOL bIsAutoExposure,
 }
 
 RK_S32 SAMPLE_COMM_ISP_SET_BackLight(RK_S32 CamId, RK_BOOL bEnable,
-                                      RK_U32 u32Strength) {
+                                     RK_U32 u32Strength) {
   if (CamId >= MAX_AIQ_CTX || !g_aiq_ctx[CamId]) {
     printf("%s : CamId is over 3 or not init\n", __FUNCTION__);
     return -1;
@@ -407,12 +408,15 @@ RK_S32 SAMPLE_COMM_ISP_SET_BackLight(RK_S32 CamId, RK_BOOL bEnable,
   pthread_mutex_lock(&aiq_ctx_mutex[CamId]);
   if (g_aiq_ctx[CamId]) {
     if (bEnable) {
-      ret = rk_aiq_uapi_setBLCMode(g_aiq_ctx[CamId], RK_TRUE, AE_MEAS_AREA_AUTO);
+      ret =
+          rk_aiq_uapi_setBLCMode(g_aiq_ctx[CamId], RK_TRUE, AE_MEAS_AREA_AUTO);
       usleep(30000);
       //[0~2]->[1~100]
-      ret |= rk_aiq_uapi_setBLCStrength(g_aiq_ctx[CamId], 33 * (u32Strength + 1));
+      ret |=
+          rk_aiq_uapi_setBLCStrength(g_aiq_ctx[CamId], 33 * (u32Strength + 1));
     } else {
-      ret = rk_aiq_uapi_setBLCMode(g_aiq_ctx[CamId], RK_FALSE, AE_MEAS_AREA_AUTO);
+      ret =
+          rk_aiq_uapi_setBLCMode(g_aiq_ctx[CamId], RK_FALSE, AE_MEAS_AREA_AUTO);
     }
   }
   pthread_mutex_unlock(&aiq_ctx_mutex[CamId]);
@@ -420,7 +424,7 @@ RK_S32 SAMPLE_COMM_ISP_SET_BackLight(RK_S32 CamId, RK_BOOL bEnable,
 }
 
 RK_S32 SAMPLE_COMM_ISP_SET_LightInhibition(RK_S32 CamId, RK_BOOL bEnable,
-                                            RK_U8 u8Strength, RK_U8 u8Level) {
+                                           RK_U8 u8Strength, RK_U8 u8Level) {
   if (CamId >= MAX_AIQ_CTX || !g_aiq_ctx[CamId]) {
     printf("%s : CamId is over 3 or not init\n", __FUNCTION__);
     return -1;
@@ -444,7 +448,7 @@ RK_S32 SAMPLE_COMM_ISP_SET_LightInhibition(RK_S32 CamId, RK_BOOL bEnable,
   return ret;
 }
 
-RK_S32 SAMPLE_COMM_ISP_SET_CPSL_CFG(RK_S32 CamId, rk_aiq_cpsl_cfg_t *cpsl) {
+RK_S32 SAMPLE_COMM_ISP_SET_CPSL_CFG(RK_S32 CamId, rk_aiq_cpsl_cfg_t* cpsl) {
   if (CamId >= MAX_AIQ_CTX || !g_aiq_ctx[CamId]) {
     printf("%s : CamId is over 3 or not init\n", __FUNCTION__);
     return -1;
@@ -509,8 +513,8 @@ RK_S32 SAMPLE_COMMON_ISP_SET_AutoWhiteBalance(RK_S32 CamId) {
 }
 
 RK_S32 SAMPLE_COMMON_ISP_SET_ManualWhiteBalance(RK_S32 CamId, RK_U32 u32RGain,
-                                                 RK_U32 u32GGain,
-                                                 RK_U32 u32BGain) {
+                                                RK_U32 u32GGain,
+                                                RK_U32 u32BGain) {
   if (CamId >= MAX_AIQ_CTX || !g_aiq_ctx[CamId]) {
     printf("%s : CamId is over 3 or not init\n", __FUNCTION__);
     return -1;
@@ -548,7 +552,7 @@ RK_S32 SAMPLE_COMMON_ISP_SET_ManualWhiteBalance(RK_S32 CamId, RK_U32 u32RGain,
 }
 
 RK_S32 SAMPLE_COMMON_ISP_GET_WhiteBalanceGain(RK_S32 CamId,
-                                               rk_aiq_wb_gain_t *gain) {
+                                              rk_aiq_wb_gain_t* gain) {
   if (CamId >= MAX_AIQ_CTX || !g_aiq_ctx[CamId]) {
     printf("%s : CamId is over 3 or not init\n", __FUNCTION__);
     return -1;
@@ -567,8 +571,7 @@ RK_S32 SAMPLE_COMMON_ISP_GET_WhiteBalanceGain(RK_S32 CamId,
 
 // mode 0:off, 1:2d, 2:3d, 3: 2d+3d
 RK_S32 SAMPLE_COMMON_ISP_SET_DNRStrength(RK_S32 CamId, RK_U32 u32Mode,
-                                          RK_U32 u322DValue,
-                                          RK_U32 u323Dvalue) {
+                                         RK_U32 u322DValue, RK_U32 u323Dvalue) {
   if (CamId >= MAX_AIQ_CTX || !g_aiq_ctx[CamId]) {
     printf("%s : CamId is over 3 or not init\n", __FUNCTION__);
     return -1;
@@ -585,49 +588,51 @@ RK_S32 SAMPLE_COMMON_ISP_SET_DNRStrength(RK_S32 CamId, RK_U32 u32Mode,
   if (g_aiq_ctx[CamId]) {
     if (u32Mode == 0) {
       ret = rk_aiq_uapi_sysctl_setModuleCtl(g_aiq_ctx[CamId], RK_MODULE_NR,
-                                      true); // 2D
+                                            true);  // 2D
       ret |= rk_aiq_uapi_sysctl_setModuleCtl(g_aiq_ctx[CamId], RK_MODULE_TNR,
-                                      true); // 3D
+                                             true);  // 3D
       ret |= rk_aiq_uapi_setMSpaNRStrth(g_aiq_ctx[CamId], true,
-                                 g_2dnr_default_level); //[0,100]
+                                        g_2dnr_default_level);  //[0,100]
       ret |= rk_aiq_uapi_setMTNRStrth(g_aiq_ctx[CamId], true,
-                               g_3dnr_default_level); //[0,100]
-    } else if (u32Mode == 1)                          // 2D
+                                      g_3dnr_default_level);  //[0,100]
+    } else if (u32Mode == 1)                                  // 2D
     {
       ret = rk_aiq_uapi_sysctl_setModuleCtl(g_aiq_ctx[CamId], RK_MODULE_NR,
-                                      true); // 2D
+                                            true);  // 2D
       ret |= rk_aiq_uapi_sysctl_setModuleCtl(g_aiq_ctx[CamId], RK_MODULE_TNR,
-                                      true); // 3D
+                                             true);  // 3D
       ret |= rk_aiq_uapi_setMSpaNRStrth(g_aiq_ctx[CamId], true,
-                                 u32_2d_value); ////[0,255] -> [0,100]
-      ret |= rk_aiq_uapi_setMTNRStrth(g_aiq_ctx[CamId], true, g_3dnr_default_level);
-    } else if (u32Mode == 2) // 3D
+                                        u32_2d_value);  ////[0,255] -> [0,100]
+      ret |= rk_aiq_uapi_setMTNRStrth(g_aiq_ctx[CamId], true,
+                                      g_3dnr_default_level);
+    } else if (u32Mode == 2)  // 3D
     {
       ret = rk_aiq_uapi_sysctl_setModuleCtl(g_aiq_ctx[CamId], RK_MODULE_NR,
-                                      true); // 2D
+                                            true);  // 2D
       ret |= rk_aiq_uapi_sysctl_setModuleCtl(g_aiq_ctx[CamId], RK_MODULE_TNR,
-                                      true); // 3D
-      ret |= rk_aiq_uapi_setMSpaNRStrth(g_aiq_ctx[CamId], true,
-                                 g_2dnr_default_level); //[0,100]->[0,255]
+                                             true);  // 3D
+      ret |=
+          rk_aiq_uapi_setMSpaNRStrth(g_aiq_ctx[CamId], true,
+                                     g_2dnr_default_level);  //[0,100]->[0,255]
       ret |= rk_aiq_uapi_setMTNRStrth(g_aiq_ctx[CamId], true, u32_3d_value);
-    } else if (u32Mode == 3) //)//2D+3D
+    } else if (u32Mode == 3)  //)//2D+3D
     {
       ret = rk_aiq_uapi_sysctl_setModuleCtl(g_aiq_ctx[CamId], RK_MODULE_NR,
-                                      true); // 2D
+                                            true);  // 2D
       ret |= rk_aiq_uapi_sysctl_setModuleCtl(g_aiq_ctx[CamId], RK_MODULE_TNR,
-                                      true); // 3D
+                                             true);  // 3D
       ret |= rk_aiq_uapi_setMSpaNRStrth(g_aiq_ctx[CamId], true,
-                                 u32_2d_value); //[0,255] -> [0,100]
+                                        u32_2d_value);  //[0,255] -> [0,100]
       ret |= rk_aiq_uapi_setMTNRStrth(g_aiq_ctx[CamId], true,
-                               u32_3d_value); //[0,255] -> [0,100]
+                                      u32_3d_value);  //[0,255] -> [0,100]
     }
   }
   pthread_mutex_unlock(&aiq_ctx_mutex[CamId]);
   return ret;
 }
 
-RK_S32 SAMPLE_COMMON_ISP_GET_DNRStrength(RK_S32 CamId, RK_U32 *u322DValue,
-                                          RK_U32 *u323Dvalue) {
+RK_S32 SAMPLE_COMMON_ISP_GET_DNRStrength(RK_S32 CamId, RK_U32* u322DValue,
+                                         RK_U32* u323Dvalue) {
   if (CamId >= MAX_AIQ_CTX || !g_aiq_ctx[CamId]) {
     printf("%s : CamId is over 3 or not init\n", __FUNCTION__);
     return -1;
@@ -653,18 +658,17 @@ RK_S32 SAMPLE_COMMON_ISP_SET_Flicker(RK_S32 CamId, RK_U8 u32Flicker) {
 
   pthread_mutex_lock(&aiq_ctx_mutex[CamId]);
   if (g_aiq_ctx[CamId]) {
-    if (u32Flicker == 0) // NTSC(60HZ)
+    if (u32Flicker == 0)  // NTSC(60HZ)
     {
-
       ret = rk_aiq_uapi_setExpPwrLineFreqMode(g_aiq_ctx[CamId],
-                                        EXP_PWR_LINE_FREQ_60HZ);
+                                              EXP_PWR_LINE_FREQ_60HZ);
       info.mode = OP_MANUAL;
       info.fps = 30;
       ret |= rk_aiq_uapi_setFrameRate(g_aiq_ctx[CamId], info);
-    } else if (u32Flicker == 1) // PAL(50HZ)
+    } else if (u32Flicker == 1)  // PAL(50HZ)
     {
       ret = rk_aiq_uapi_setExpPwrLineFreqMode(g_aiq_ctx[CamId],
-                                        EXP_PWR_LINE_FREQ_50HZ);
+                                              EXP_PWR_LINE_FREQ_50HZ);
       info.mode = OP_MANUAL;
       info.fps = 25;
       ret |= rk_aiq_uapi_setFrameRate(g_aiq_ctx[CamId], info);
@@ -717,7 +721,7 @@ RK_S32 SAMPLE_COMM_ISP_SET_DefogEnable(RK_S32 CamId, RK_U32 u32Mode) {
 }
 
 RK_S32 SAMPLE_COMM_ISP_SET_DefogStrength(RK_S32 CamId, RK_U32 u32Mode,
-                                          RK_U32 u32Value) {
+                                         RK_U32 u32Value) {
   if (CamId >= MAX_AIQ_CTX || !g_aiq_ctx[CamId]) {
     printf("%s : CamId is over 3 or not init\n", __FUNCTION__);
     return -1;
@@ -731,7 +735,8 @@ RK_S32 SAMPLE_COMM_ISP_SET_DefogStrength(RK_S32 CamId, RK_U32 u32Mode,
   if (g_aiq_ctx[CamId]) {
     if (u32Mode == 1) {
       ret = rk_aiq_uapi_setDhzMode(g_aiq_ctx[CamId], OP_MANUAL);
-      ret |= rk_aiq_uapi_setMDhzStrth(g_aiq_ctx[CamId], true, level); //[0,255]->[1,10]
+      ret |= rk_aiq_uapi_setMDhzStrth(g_aiq_ctx[CamId], true,
+                                      level);  //[0,255]->[1,10]
     } else if (u32Mode == 2) {
       ret = rk_aiq_uapi_setDhzMode(g_aiq_ctx[CamId], OP_AUTO);
     }
@@ -741,7 +746,7 @@ RK_S32 SAMPLE_COMM_ISP_SET_DefogStrength(RK_S32 CamId, RK_U32 u32Mode,
 }
 
 RK_S32 SAMPLE_COMM_ISP_SET_Correction(RK_S32 CamId, RK_U32 u32Mode,
-                                       RK_U32 u32Value) {
+                                      RK_U32 u32Value) {
   if (CamId >= MAX_AIQ_CTX || !g_aiq_ctx[CamId]) {
     printf("%s : CamId is over 3 or not init\n", __FUNCTION__);
     return -1;
@@ -760,7 +765,7 @@ RK_S32 SAMPLE_COMM_ISP_SET_Correction(RK_S32 CamId, RK_U32 u32Mode,
 
     if (u32Mode) {
       ret |= rk_aiq_uapi_setLdchCorrectLevel(g_aiq_ctx[CamId],
-                                      (u32Value < 2 ? 2 : u32Value));
+                                             (u32Value < 2 ? 2 : u32Value));
     }
   }
   pthread_mutex_unlock(&aiq_ctx_mutex[CamId]);
@@ -777,26 +782,26 @@ RK_S32 SAMPLE_COMM_ISP_SET_mirror(RK_S32 CamId, RK_U32 u32Value) {
   RK_S32 ret = 0;
   pthread_mutex_lock(&aiq_ctx_mutex[CamId]);
   switch (u32Value) {
-  case 0:
-    mirror = 0;
-    flip = 0;
-    break;
-  case 1:
-    mirror = 1;
-    flip = 0;
-    break;
-  case 2:
-    mirror = 0;
-    flip = 1;
-    break;
-  case 3:
-    mirror = 1;
-    flip = 1;
-    break;
-  default:
-    mirror = 0;
-    flip = 0;
-    break;
+    case 0:
+      mirror = 0;
+      flip = 0;
+      break;
+    case 1:
+      mirror = 1;
+      flip = 0;
+      break;
+    case 2:
+      mirror = 0;
+      flip = 1;
+      break;
+    case 3:
+      mirror = 1;
+      flip = 1;
+      break;
+    default:
+      mirror = 0;
+      flip = 0;
+      break;
   }
 
   if (g_aiq_ctx[CamId]) {
@@ -807,7 +812,7 @@ RK_S32 SAMPLE_COMM_ISP_SET_mirror(RK_S32 CamId, RK_U32 u32Value) {
 }
 
 RK_S32 SAMPLE_COMM_ISP_SET_BypassStreamRotation(RK_S32 CamId,
-                                                 RK_S32 S32Rotation) {
+                                                RK_S32 S32Rotation) {
   if (CamId >= MAX_AIQ_CTX || !g_aiq_ctx[CamId]) {
     printf("%s : CamId is over 3 or not init\n", __FUNCTION__);
     return -1;
@@ -850,4 +855,3 @@ rk_aiq_uapi_sysctl_setCrop(aiq_ctx, rect);*/
   pthread_mutex_unlock(&aiq_ctx_mutex[CamId]);
   return ret;
 }
-

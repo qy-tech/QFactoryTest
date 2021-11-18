@@ -5,11 +5,6 @@
 #ifndef EASYMEDIA_FLOW_H_
 #define EASYMEDIA_FLOW_H_
 
-#include "lock.h"
-#include "message.h"
-#include "reflector.h"
-#include "utils.h"
-
 #include <stdarg.h>
 
 #include <deque>
@@ -18,6 +13,10 @@
 #include <vector>
 
 #include "control.h"
+#include "lock.h"
+#include "message.h"
+#include "reflector.h"
+#include "utils.h"
 
 namespace easymedia {
 
@@ -26,11 +25,11 @@ DECLARE_FACTORY(Flow)
 // T must be the final class type exposed to user
 DECLARE_REFLECTOR(Flow)
 
-#define DEFINE_FLOW_FACTORY(REAL_PRODUCT, FINAL_EXPOSE_PRODUCT)                \
-  DEFINE_MEDIA_CHILD_FACTORY(REAL_PRODUCT, REAL_PRODUCT::GetFlowName(),        \
-                             FINAL_EXPOSE_PRODUCT, Flow)                       \
-  DEFINE_MEDIA_CHILD_FACTORY_EXTRA(REAL_PRODUCT)                               \
-  DEFINE_MEDIA_NEW_PRODUCT_BY(REAL_PRODUCT, FINAL_EXPOSE_PRODUCT,              \
+#define DEFINE_FLOW_FACTORY(REAL_PRODUCT, FINAL_EXPOSE_PRODUCT)         \
+  DEFINE_MEDIA_CHILD_FACTORY(REAL_PRODUCT, REAL_PRODUCT::GetFlowName(), \
+                             FINAL_EXPOSE_PRODUCT, Flow)                \
+  DEFINE_MEDIA_CHILD_FACTORY_EXTRA(REAL_PRODUCT)                        \
+  DEFINE_MEDIA_NEW_PRODUCT_BY(REAL_PRODUCT, FINAL_EXPOSE_PRODUCT,       \
                               GetError() < 0)
 
 class MediaBuffer;
@@ -41,36 +40,38 @@ enum class HoldInputMode { NONE, HOLD_INPUT, INHERIT_FORM_INPUT };
 using MediaBufferVector = std::vector<std::shared_ptr<MediaBuffer>>;
 // TODO: outputs ret, outslot index, outslot queue model
 using FunctionProcess =
-    std::add_pointer<bool(Flow *f, MediaBufferVector &input_vector)>::type;
+    std::add_pointer<bool(Flow* f, MediaBufferVector& input_vector)>::type;
 template <int in_index, int out_index>
-bool void_transaction(Flow *f, MediaBufferVector &input_vector);
+bool void_transaction(Flow* f, MediaBufferVector& input_vector);
 using LinkVideoHandler =
-    std::add_pointer<void(unsigned char *buffer, unsigned int buffer_size,
+    std::add_pointer<void(unsigned char* buffer, unsigned int buffer_size,
                           int64_t present_time, int nat_type)>::type;
 using LinkAudioHandler =
-    std::add_pointer<void(unsigned char *buffer, unsigned int buffer_size,
+    std::add_pointer<void(unsigned char* buffer, unsigned int buffer_size,
                           int64_t present_time)>::type;
 using LinkCaptureHandler =
-    std::add_pointer<void(unsigned char *buffer, unsigned int buffer_size,
-                          int type, const char *id)>::type;
-using PlayVideoHandler = std::add_pointer<void(Flow *f)>::type;
-using PlayAudioHandler = std::add_pointer<void(Flow *f)>::type;
+    std::add_pointer<void(unsigned char* buffer, unsigned int buffer_size,
+                          int type, const char* id)>::type;
+using PlayVideoHandler = std::add_pointer<void(Flow* f)>::type;
+using PlayAudioHandler = std::add_pointer<void(Flow* f)>::type;
 using CallBackHandler = std::add_pointer<void>::type;
 using UserCallBack =
-    std::add_pointer<void(void *handler, int type, void *ptr, int size)>::type;
+    std::add_pointer<void(void* handler, int type, void* ptr, int size)>::type;
 using OutputCallBack = std::add_pointer<void(
-    void *handler, std::shared_ptr<MediaBuffer> mb)>::type;
-using EventCallBack = std::add_pointer<void(void *handler, void *data)>::type;
+    void* handler, std::shared_ptr<MediaBuffer> mb)>::type;
+using EventCallBack = std::add_pointer<void(void* handler, void* data)>::type;
 
 class _API SlotMap {
-public:
+ public:
   SlotMap()
-      : thread_model(Model::SYNC), mode_when_full(InputMode::DROPFRONT),
-        process(nullptr), interval(16.66f) {}
+      : thread_model(Model::SYNC),
+        mode_when_full(InputMode::DROPFRONT),
+        process(nullptr),
+        interval(16.66f) {}
   std::vector<int> input_slots;
   Model thread_model;
   InputMode mode_when_full;
-  std::vector<bool> fetch_block; // if ASYNCCOMMON
+  std::vector<bool> fetch_block;  // if ASYNCCOMMON
   std::vector<int> input_maxcachenum;
   std::vector<int> output_slots;
   // std::vector<DataSetModel> output_ds_model;
@@ -81,16 +82,16 @@ public:
 
 class FlowCoroutine;
 class _API Flow {
-public:
+ public:
   // We may need a flow which can be sync and async.
   // This make a side effect that sync flow contains superfluous variables
   // designed for async implementation.
   Flow();
   virtual ~Flow();
-  static const char *GetFlowName() { return nullptr; }
+  static const char* GetFlowName() { return nullptr; }
   // The GetFlowName interface is occupied by the reflector,
   // so GetFlowTag is used to distinguish Flow.
-  const char *GetFlowTag() { return flow_tag.c_str(); }
+  const char* GetFlowTag() { return flow_tag.c_str(); }
   void SetFlowTag(std::string tag) { flow_tag = tag; }
 
   // TODO: Right now out_slot_index and in_slot_index is decided by exact
@@ -99,12 +100,12 @@ public:
                    int in_slot_index_of_down);
   void RemoveDownFlow(std::shared_ptr<Flow> down);
 
-  void SendInput(std::shared_ptr<MediaBuffer> &input, int in_slot_index);
+  void SendInput(std::shared_ptr<MediaBuffer>& input, int in_slot_index);
   void SetDisable() { enable = false; }
 
   // The Control must be called in the same thread to that create flow
   virtual int Control(unsigned long int request _UNUSED, ...) { return -1; }
-  virtual int SubControl(unsigned long int request, void *arg, int size = 0) {
+  virtual int SubControl(unsigned long int request, void* arg, int size = 0) {
     SubRequest subreq = {request, size, arg};
     return Control(S_SUB_REQUEST, &subreq);
   }
@@ -164,8 +165,7 @@ public:
 
   int SetInputFpsControl(int in, int out) {
     if (!in || (out > in)) {
-      RKMEDIA_LOGE("Flow:%s: invalid fps(%d --> %d)\n",
-                   GetFlowTag(), in, out);
+      RKMEDIA_LOGE("Flow:%s: invalid fps(%d --> %d)\n", GetFlowTag(), in, out);
       return -1;
     }
 
@@ -181,7 +181,7 @@ public:
     return 0;
   }
 
-  int GetInputFpsControl(int &in, int &out) {
+  int GetInputFpsControl(int& in, int& out) {
     in = fps_in;
     out = fps_out;
     return 0;
@@ -193,33 +193,33 @@ public:
   int GetRunTimesRemaining();
 
   bool IsAllBuffEmpty();
-  void DumpBase(std::string &dump_info);
-  virtual void Dump(std::string &dump_info) { DumpBase(dump_info); }
+  void DumpBase(std::string& dump_info);
+  virtual void Dump(std::string& dump_info) { DumpBase(dump_info); }
 
   void StartStream();
-  int GetCachedBufferNum(unsigned int &total, unsigned int &used);
+  int GetCachedBufferNum(unsigned int& total, unsigned int& used);
   void ClearCachedBuffers();
 
-protected:
+ protected:
   class FlowInputMap {
-  public:
-    FlowInputMap(std::shared_ptr<Flow> &f, int i) : flow(f), index_of_in(i) {}
-    std::shared_ptr<Flow> flow; // weak_ptr?
+   public:
+    FlowInputMap(std::shared_ptr<Flow>& f, int i) : flow(f), index_of_in(i) {}
+    std::shared_ptr<Flow> flow;  // weak_ptr?
     int index_of_in;
     bool operator==(const std::shared_ptr<easymedia::Flow> f) {
       return flow == f;
     }
   };
   class FlowMap {
-  private:
-    void SetOutputBehavior(const std::shared_ptr<MediaBuffer> &output);
-    void SetOutputToQueueBehavior(const std::shared_ptr<MediaBuffer> &output);
+   private:
+    void SetOutputBehavior(const std::shared_ptr<MediaBuffer>& output);
+    void SetOutputToQueueBehavior(const std::shared_ptr<MediaBuffer>& output);
 
-  public:
+   public:
     FlowMap() : valid(false), hold_input(HoldInputMode::NONE) {
       assert(list_mtx.valid);
     }
-    FlowMap(FlowMap &&);
+    FlowMap(FlowMap&&);
     void Init(Model m, HoldInputMode hold_in);
     bool valid;
     HoldInputMode hold_input;
@@ -228,27 +228,27 @@ protected:
     void RemoveFlow(std::shared_ptr<Flow> flow);
     std::list<FlowInputMap> flows;
     ReadWriteLockMutex list_mtx;
-    std::deque<std::shared_ptr<MediaBuffer>> cached_buffers; // never drop
+    std::deque<std::shared_ptr<MediaBuffer>> cached_buffers;  // never drop
     std::shared_ptr<MediaBuffer> cached_buffer;
     decltype(&FlowMap::SetOutputBehavior) set_output_behavior;
   };
   class Input {
-  private:
-    void SyncSendInputBehavior(std::shared_ptr<MediaBuffer> &input);
-    void ASyncSendInputCommonBehavior(std::shared_ptr<MediaBuffer> &input);
-    void ASyncSendInputAtomicBehavior(std::shared_ptr<MediaBuffer> &input);
+   private:
+    void SyncSendInputBehavior(std::shared_ptr<MediaBuffer>& input);
+    void ASyncSendInputCommonBehavior(std::shared_ptr<MediaBuffer>& input);
+    void ASyncSendInputAtomicBehavior(std::shared_ptr<MediaBuffer>& input);
     // behavior when input list exceed max_cache_num
-    bool ASyncFullBlockingBehavior(volatile bool &pred);
-    bool ASyncFullDropFrontBehavior(volatile bool &pred);
-    bool ASyncFullDropCurrentBehavior(volatile bool &pred);
+    bool ASyncFullBlockingBehavior(volatile bool& pred);
+    bool ASyncFullDropFrontBehavior(volatile bool& pred);
+    bool ASyncFullDropCurrentBehavior(volatile bool& pred);
 
-  public:
+   public:
     Input() : valid(false), flow(nullptr), fetch_block(true) {}
-    Input(Input &&);
-    void Init(Flow *f, Model m, int mcn, InputMode im, bool f_block,
+    Input(Input&&);
+    void Init(Flow* f, Model m, int mcn, InputMode im, bool f_block,
               std::shared_ptr<FlowCoroutine> fc);
     bool valid;
-    Flow *flow;
+    Flow* flow;
     Model thread_model;
     bool fetch_block;
     std::deque<std::shared_ptr<MediaBuffer>> cached_buffers;
@@ -275,36 +275,36 @@ protected:
   bool waite_down_flow;
 
   // source flow
-  bool SetAsSource(const std::vector<int> &output_slots, FunctionProcess f,
-                   const std::string &mark);
-  bool InstallSlotMap(SlotMap &map, const std::string &mark,
+  bool SetAsSource(const std::vector<int>& output_slots, FunctionProcess f,
+                   const std::string& mark);
+  bool InstallSlotMap(SlotMap& map, const std::string& mark,
                       int exp_process_time);
-  bool SetOutput(const std::shared_ptr<MediaBuffer> &output,
+  bool SetOutput(const std::shared_ptr<MediaBuffer>& output,
                  int out_slot_index);
-  bool ParseWrapFlowParams(const char *param,
-                           std::map<std::string, std::string> &flow_params,
-                           std::list<std::string> &sub_param_list);
+  bool ParseWrapFlowParams(const char* param,
+                           std::map<std::string, std::string>& flow_params,
+                           std::list<std::string>& sub_param_list);
   // As sub threads may call the variable of child class,
   // we should define this for child class when it deconstruct.
   void StopAllThread();
   bool IsEnable() { return enable; }
 
   template <int in_index, int out_index>
-  friend bool void_transaction(Flow *f, MediaBufferVector &input_vector) {
+  friend bool void_transaction(Flow* f, MediaBufferVector& input_vector) {
     return f->SetOutput(input_vector[in_index], out_index);
   }
   static const FunctionProcess void_transaction00;
 
-public:
+ public:
   CallBackHandler event_handler2_;
   EventCallBack event_callback_;
 
   // support fps control for input buffer
   int fps_in;
   int fps_out;
-  int fps_cnt; // Used for frame rate statistics
+  int fps_cnt;  // Used for frame rate statistics
 
-private:
+ private:
   volatile bool enable;
   volatile bool quit;
   ConditionLockMutex cond_mtx;
@@ -337,22 +337,22 @@ private:
   DECLARE_PART_FINAL_EXPOSE_PRODUCT(Flow)
 };
 
-std::string gen_datatype_rule(std::map<std::string, std::string> &params);
-Model GetModelByString(const std::string &model);
-InputMode GetInputModelByString(const std::string &in_model);
-_API void ParseParamToSlotMap(std::map<std::string, std::string> &params,
-                              SlotMap &sm, int &input_maxcachenum);
-size_t FlowOutputHoldInput(std::shared_ptr<MediaBuffer> &out_buffer,
-                           const MediaBufferVector &input_vector);
-size_t FlowOutputInheritFromInput(std::shared_ptr<MediaBuffer> &out_buffer,
-                                  const MediaBufferVector &input_vector);
+std::string gen_datatype_rule(std::map<std::string, std::string>& params);
+Model GetModelByString(const std::string& model);
+InputMode GetInputModelByString(const std::string& in_model);
+_API void ParseParamToSlotMap(std::map<std::string, std::string>& params,
+                              SlotMap& sm, int& input_maxcachenum);
+size_t FlowOutputHoldInput(std::shared_ptr<MediaBuffer>& out_buffer,
+                           const MediaBufferVector& input_vector);
+size_t FlowOutputInheritFromInput(std::shared_ptr<MediaBuffer>& out_buffer,
+                                  const MediaBufferVector& input_vector);
 
 // the separator of flow params and flow core element params
 #define FLOW_PARAM_SEPARATE_CHAR ' '
-_API std::string JoinFlowParam(const std::string &flow_param, size_t num_elem,
+_API std::string JoinFlowParam(const std::string& flow_param, size_t num_elem,
                                ...);
-_API std::list<std::string> ParseFlowParamToList(const char *param);
+_API std::list<std::string> ParseFlowParamToList(const char* param);
 
-} // namespace easymedia
+}  // namespace easymedia
 
-#endif // #ifndef EASYMEDIA_FLOW_H_
+#endif  // #ifndef EASYMEDIA_FLOW_H_

@@ -9,17 +9,17 @@ class TimeTestDialog;
 }
 
 class TimeTestDialog : public QDialog {
-    Q_OBJECT
+  Q_OBJECT
 
-public:
-    explicit TimeTestDialog(QWidget* parent = nullptr);
-    ~TimeTestDialog();
+ public:
+  explicit TimeTestDialog(QWidget* parent = nullptr);
+  ~TimeTestDialog();
 
-protected:
-    void timerEvent(QTimerEvent* event);
+ protected:
+  void timerEvent(QTimerEvent* event);
 
-private:
-    Ui::TimeTestDialog* ui;
+ private:
+  Ui::TimeTestDialog* ui;
 };
 
-#endif // TIMETESTDIALOG_H
+#endif  // TIMETESTDIALOG_H

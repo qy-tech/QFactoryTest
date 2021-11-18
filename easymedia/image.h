@@ -34,17 +34,17 @@ typedef enum {
 
 typedef struct {
   PixelFormat pix_fmt;
-  int width;      // valid pixel width
-  int height;     // valid pixel height
-  int vir_width;  // stride width, same to buffer_width, must greater than
-                  // width, often set vir_width=(width+15)&(~15)
-  int vir_height; // stride height, same to buffer_height, must greater than
-                  // height, often set vir_height=(height+15)&(~15)
+  int width;       // valid pixel width
+  int height;      // valid pixel height
+  int vir_width;   // stride width, same to buffer_width, must greater than
+                   // width, often set vir_width=(width+15)&(~15)
+  int vir_height;  // stride height, same to buffer_height, must greater than
+                   // height, often set vir_height=(height+15)&(~15)
 } ImageInfo;
 
 typedef struct {
-  int x, y; // left, top
-  int w, h; // width, height
+  int x, y;  // left, top
+  int w, h;  // width, height
 } ImageRect;
 
 typedef struct {
@@ -65,7 +65,7 @@ typedef struct {
   int y;
   int w;
   int h;
-  void *data;
+  void* data;
   PixelFormat pix_fmt;
 } ImageOsd;
 
@@ -85,30 +85,30 @@ typedef struct {
 
 #include "utils.h"
 
-_API void GetPixFmtNumDen(const PixelFormat &fmt, int &num, int &den);
-_API int CalPixFmtSize(const PixelFormat &fmt, const int width,
+_API void GetPixFmtNumDen(const PixelFormat& fmt, int& num, int& den);
+_API int CalPixFmtSize(const PixelFormat& fmt, const int width,
                        const int height, int align = 0);
-_API inline int CalPixFmtSize(const ImageInfo &ii, int align = 0) {
+_API inline int CalPixFmtSize(const ImageInfo& ii, int align = 0) {
   return CalPixFmtSize(ii.pix_fmt, ii.vir_width, ii.vir_height, align);
 }
-_API PixelFormat StringToPixFmt(const char *type);
-_API const char *PixFmtToString(PixelFormat fmt);
+_API PixelFormat StringToPixFmt(const char* type);
+_API const char* PixFmtToString(PixelFormat fmt);
 
 #include <map>
 #include <string>
 #include <vector>
 
 namespace easymedia {
-bool ParseImageInfoFromMap(std::map<std::string, std::string> &params,
-                           ImageInfo &ii, bool input = true);
-_API std::string to_param_string(const ImageInfo &ii, bool input = true);
+bool ParseImageInfoFromMap(std::map<std::string, std::string>& params,
+                           ImageInfo& ii, bool input = true);
+_API std::string to_param_string(const ImageInfo& ii, bool input = true);
 
-_API std::string TwoImageRectToString(const std::vector<ImageRect> &src_dst);
-std::vector<ImageRect> StringToTwoImageRect(const std::string &str_rect);
+_API std::string TwoImageRectToString(const std::vector<ImageRect>& src_dst);
+std::vector<ImageRect> StringToTwoImageRect(const std::string& str_rect);
 
-_API std::string ImageRectToString(const ImageRect &src_dst);
-std::vector<ImageRect> StringToImageRect(const std::string &str_rect);
+_API std::string ImageRectToString(const ImageRect& src_dst);
+std::vector<ImageRect> StringToImageRect(const std::string& str_rect);
 
-} // namespace easymedia
+}  // namespace easymedia
 
-#endif // #ifndef EASYMEDIA_IMAGE_H_
+#endif  // #ifndef EASYMEDIA_IMAGE_H_

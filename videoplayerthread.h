@@ -3,15 +3,15 @@
 
 #include <QThread>
 class VideoPlayerThread : public QThread {
-    Q_OBJECT
-public:
-    VideoPlayerThread(QObject* parent = nullptr);
+  Q_OBJECT
+ public:
+  VideoPlayerThread(QObject* parent = nullptr);
 
-protected:
-    void run() override;
+ protected:
+  void run() override;
 
-signals:
-    void onPlayCompletedListener();
+ signals:
+  void onPlayCompletedListener();
 };
 
-#endif // VIDEOPLAYERTHREAD_H
+#endif  // VIDEOPLAYERTHREAD_H

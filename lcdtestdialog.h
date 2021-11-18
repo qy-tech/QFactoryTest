@@ -8,20 +8,20 @@ class LcdTestDialog;
 }
 
 class LcdTestDialog : public QDialog {
-    Q_OBJECT
+  Q_OBJECT
 
-public:
-    explicit LcdTestDialog(QWidget* parent = nullptr);
-    ~LcdTestDialog();
+ public:
+  explicit LcdTestDialog(QWidget* parent = nullptr);
+  ~LcdTestDialog();
 
-protected:
-    virtual void mouseReleaseEvent(QMouseEvent*);
+ protected:
+  virtual void mouseReleaseEvent(QMouseEvent*);
 
-private:
-    Ui::LcdTestDialog* ui;
-    QVector<QColor> colorLists;
-    void initColorList();
-    int currentColorIndex = 0;
+ private:
+  Ui::LcdTestDialog* ui;
+  QVector<QColor> colorLists;
+  void initColorList();
+  int currentColorIndex = 0;
 };
 
-#endif // LCDTESTDIALOG_H
+#endif  // LCDTESTDIALOG_H

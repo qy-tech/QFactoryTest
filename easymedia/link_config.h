@@ -10,30 +10,30 @@ namespace easymedia {
 enum LinkType { LINK_NONE, LINK_VIDEO, LINK_AUDIO, LINK_PICTURE, LINK_NNDATA };
 
 typedef struct linkvideo {
-  void *buffer_ptr;
+  void* buffer_ptr;
   unsigned int buffer_size;
   time_t timestamp;
   int nat_type;
 } linkvideo_s;
 
 typedef struct linkaudio {
-  void *buffer_ptr;
+  void* buffer_ptr;
   unsigned int buffer_size;
   time_t timestamp;
 } linkaudio_s;
 
 typedef struct linkpicture {
-  void *buffer_ptr;
+  void* buffer_ptr;
   unsigned int buffer_size;
   int type;
-  const char *id;
+  const char* id;
 } linkpicture_s;
 
 typedef struct linknndata {
   int size;
   time_t timestamp;
-  const char *nn_model_name;
-  RknnResult *rknn_result;
+  const char* nn_model_name;
+  RknnResult* rknn_result;
 } linknndata_s;
 
 typedef struct linkcommon {
@@ -45,6 +45,6 @@ typedef struct linkcommon {
   };
 } linkcommon_s;
 
-} // namespace easymedia
+}  // namespace easymedia
 
-#endif // #ifndef EASYMEDIA_FLOW_H_
+#endif  // #ifndef EASYMEDIA_FLOW_H_

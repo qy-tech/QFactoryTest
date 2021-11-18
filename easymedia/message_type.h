@@ -63,7 +63,7 @@ typedef enum {
 typedef struct {
   MuxerEventType type;
   char file_name[256];
-  int value; // "duration" or "error code".
+  int value;  // "duration" or "error code".
 } MuxerEvent;
 
 typedef enum {
@@ -72,4 +72,4 @@ typedef enum {
   MESSAGE_TYPE_UNIQUE
 } MessageType;
 
-#endif // #ifndef EASYMEDIA_MESSAGE_TYPE_H_
+#endif  // #ifndef EASYMEDIA_MESSAGE_TYPE_H_

@@ -44,4 +44,4 @@ typedef struct rkADEC_CHN_ATTR_S {
 #ifdef __cplusplus
 }
 #endif
-#endif // #ifndef __RKMEDIA_ADEC_
+#endif  // #ifndef __RKMEDIA_ADEC_

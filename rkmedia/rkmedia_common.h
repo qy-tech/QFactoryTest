@@ -352,4 +352,4 @@ typedef struct rkLOG_LEVEL_CONF_S {
 #ifdef __cplusplus
 }
 #endif
-#endif // #ifndef __RKMEDIA_COMMON_
+#endif  // #ifndef __RKMEDIA_COMMON_

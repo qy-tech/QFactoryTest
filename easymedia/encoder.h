@@ -20,54 +20,51 @@ DECLARE_FACTORY(Encoder)
 // T must be the final class type exposed to user
 DECLARE_REFLECTOR(Encoder)
 
-#define DEFINE_ENCODER_FACTORY(REAL_PRODUCT, FINAL_EXPOSE_PRODUCT)             \
-  DEFINE_MEDIA_CHILD_FACTORY(REAL_PRODUCT, REAL_PRODUCT::GetCodecName(),       \
-                             FINAL_EXPOSE_PRODUCT, Encoder)                    \
-  DEFINE_MEDIA_CHILD_FACTORY_EXTRA(REAL_PRODUCT)                               \
+#define DEFINE_ENCODER_FACTORY(REAL_PRODUCT, FINAL_EXPOSE_PRODUCT)       \
+  DEFINE_MEDIA_CHILD_FACTORY(REAL_PRODUCT, REAL_PRODUCT::GetCodecName(), \
+                             FINAL_EXPOSE_PRODUCT, Encoder)              \
+  DEFINE_MEDIA_CHILD_FACTORY_EXTRA(REAL_PRODUCT)                         \
   DEFINE_MEDIA_NEW_PRODUCT_BY(REAL_PRODUCT, Encoder, Init() != true)
 
 class Encoder : public Codec {
-public:
+ public:
   virtual ~Encoder() = default;
-  virtual bool InitConfig(const MediaConfig &cfg);
+  virtual bool InitConfig(const MediaConfig& cfg);
 };
 
 // self define by user
 class ParameterBuffer {
-public:
+ public:
   ParameterBuffer(size_t st = sizeof(int)) : size(st), ptr(nullptr) {
     if (sizeof(int) != st && st != 0) {
       ptr = malloc(st);
-      if (!ptr)
-        size = 0;
+      if (!ptr) size = 0;
     }
   }
   ~ParameterBuffer() {
-    if (ptr)
-      free(ptr);
+    if (ptr) free(ptr);
   }
   size_t GetSize() { return size; }
   int GetValue() { return value; }
   void SetValue(int v) { value = v; }
-  void *GetPtr() { return ptr; }
-  void SetPtr(void *data, size_t data_len) {
-    if (ptr && ptr != data)
-      free(ptr);
+  void* GetPtr() { return ptr; }
+  void SetPtr(void* data, size_t data_len) {
+    if (ptr && ptr != data) free(ptr);
     ptr = data;
     size = data_len;
   }
 
-private:
+ private:
   size_t size;
   int value;
-  void *ptr;
+  void* ptr;
 };
 
-#define DEFINE_VIDEO_ENCODER_FACTORY(REAL_PRODUCT)                             \
+#define DEFINE_VIDEO_ENCODER_FACTORY(REAL_PRODUCT) \
   DEFINE_ENCODER_FACTORY(REAL_PRODUCT, VideoEncoder)
 
 class _API VideoEncoder : public Encoder {
-public:
+ public:
   // changes
   static const uint32_t kQPChange = (1 << 0);
   static const uint32_t kFrameRateChange = (1 << 1);
@@ -92,38 +89,38 @@ public:
   VideoEncoder() : codec_type(CODEC_TYPE_NONE) {}
   virtual ~VideoEncoder() = default;
   void RequestChange(uint32_t change, std::shared_ptr<ParameterBuffer> value);
-  virtual void QueryChange(uint32_t change, void *value, int32_t size);
+  virtual void QueryChange(uint32_t change, void* value, int32_t size);
 
-protected:
+ protected:
   bool HasChangeReq() { return !change_list.empty(); }
   std::pair<uint32_t, std::shared_ptr<ParameterBuffer>> PeekChange();
 
   CodecType codec_type;
 
-private:
+ private:
   std::mutex change_mtx;
   std::list<std::pair<uint32_t, std::shared_ptr<ParameterBuffer>>> change_list;
 
   DECLARE_PART_FINAL_EXPOSE_PRODUCT(Encoder)
 };
 
-#define DEFINE_AUDIO_ENCODER_FACTORY(REAL_PRODUCT)                             \
+#define DEFINE_AUDIO_ENCODER_FACTORY(REAL_PRODUCT) \
   DEFINE_ENCODER_FACTORY(REAL_PRODUCT, AudioEncoder)
 
 class _API AudioEncoder : public Encoder {
-public:
+ public:
   AudioEncoder() : codec_type(CODEC_TYPE_NONE) {}
   virtual ~AudioEncoder() = default;
   virtual int GetNbSamples() { return 0; }
 
-protected:
+ protected:
   CodecType codec_type;
 
   DECLARE_PART_FINAL_EXPOSE_PRODUCT(Encoder)
 };
 
-} // namespace easymedia
+}  // namespace easymedia
 
 #endif
 
-#endif // EASYMEDIA_ENCODER_H_
+#endif  // EASYMEDIA_ENCODER_H_

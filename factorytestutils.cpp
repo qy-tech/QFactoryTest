@@ -6,32 +6,26 @@
 #include <QProcess>
 #include <QSize>
 #include <QWidget>
-FactoryTestUtils::FactoryTestUtils()
-{
+FactoryTestUtils::FactoryTestUtils() {}
+
+void FactoryTestUtils::windowFullScreen(QWidget* widget) {
+  widget->showFullScreen();
 }
 
-void FactoryTestUtils::windowFullScreen(QWidget* widget)
-{
-    widget->showFullScreen();
+void FactoryTestUtils::windowCenterScreen(QWidget* widget) {
+  widget->resize(screenWidth / 2, screenHeight / 2);
+  widget->move((screenWidth - widget->width()) / 2,
+               (screenHeight - widget->height()) / 2);
 }
 
-void FactoryTestUtils::windowCenterScreen(QWidget* widget)
-{
-
-    widget->resize(screenWidth / 2, screenHeight / 2);
-    widget->move((screenWidth - widget->width()) / 2, (screenHeight - widget->height()) / 2);
+void FactoryTestUtils::moveWidgetRightBottom(QWidget* widget) {
+  widget->move(FactoryTestUtils::screenWidth * 0.95 - widget->width(),
+               FactoryTestUtils::screenHeight * 0.95 - widget->height());
 }
 
-void FactoryTestUtils::moveWidgetRightBottom(QWidget* widget)
-{
-    widget->move(FactoryTestUtils::screenWidth * 0.95 - widget->width(),
-        FactoryTestUtils::screenHeight * 0.95 - widget->height());
-}
-
-QString FactoryTestUtils::runCommand(QString cmd)
-{
-    QProcess p;
-    p.execute("bash", QStringList() << "-c" << cmd);
-    p.waitForFinished();
-    return p.readAllStandardOutput();
+QString FactoryTestUtils::runCommand(QString cmd) {
+  QProcess p;
+  p.execute("bash", QStringList() << "-c" << cmd);
+  p.waitForFinished();
+  return p.readAllStandardOutput();
 }

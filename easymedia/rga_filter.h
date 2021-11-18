@@ -5,36 +5,36 @@
 #ifndef EASYMEDIA_RGA_H_
 #define EASYMEDIA_RGA_H_
 
+#include <rga/RockchipRga.h>
+
 #include "buffer.h"
 #include "filter.h"
 #include "image.h"
-
-#include <rga/RockchipRga.h>
 
 namespace easymedia {
 
 class ImageBuffer;
 
 typedef struct {
-  void *data;
+  void* data;
   PixelFormat fmt;
 } OsdInfo;
 
 typedef enum { FLIP_NULL, FLIP_H, FLIP_V, FLIP_HV } FlipEnum;
 
 class RgaFilter : public Filter {
-public:
-  RgaFilter(const char *param);
+ public:
+  RgaFilter(const char* param);
   virtual ~RgaFilter();
-  static const char *GetFilterName() { return "rkrga"; }
+  static const char* GetFilterName() { return "rkrga"; }
   virtual int Process(std::shared_ptr<MediaBuffer> input,
-                      std::shared_ptr<MediaBuffer> &output) override;
+                      std::shared_ptr<MediaBuffer>& output) override;
 
   void SetRects(std::vector<ImageRect> vec_rect);
   static RockchipRga gRkRga;
   virtual int IoCtrl(unsigned long int request _UNUSED, ...) override;
 
-private:
+ private:
   // After initialization, these parameters cannot be changed.
   // Rect must be within the maximum range.
   unsigned int src_max_width;
@@ -54,13 +54,13 @@ private:
 };
 
 int rga_blit(std::shared_ptr<ImageBuffer> src, std::shared_ptr<ImageBuffer> dst,
-             std::vector<ImageBorder> &lines,
-             std::map<std::string, OsdInfo> osds, ImageRegionLuma *region_luma,
-             ImageRect *src_rect = nullptr, ImageRect *dst_rect = nullptr,
+             std::vector<ImageBorder>& lines,
+             std::map<std::string, OsdInfo> osds, ImageRegionLuma* region_luma,
+             ImageRect* src_rect = nullptr, ImageRect* dst_rect = nullptr,
              int rotate = 0, FlipEnum flip = FLIP_NULL, int hide = 0);
 
 int get_rga_format(PixelFormat f);
 
-} // namespace easymedia
+}  // namespace easymedia
 
-#endif // #ifndef EASYMEDIA_RGA_H_
+#endif  // #ifndef EASYMEDIA_RGA_H_

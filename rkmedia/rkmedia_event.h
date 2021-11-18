@@ -9,9 +9,9 @@ extern "C" {
 
 #include "rkmedia_common.h"
 
-typedef void (*EventCbFunc)(RK_VOID *pHandle, RK_VOID *event);
+typedef void (*EventCbFunc)(RK_VOID* pHandle, RK_VOID* event);
 
 #ifdef __cplusplus
 }
 #endif
-#endif // #ifndef __RK_EVENT_
+#endif  // #ifndef __RK_EVENT_

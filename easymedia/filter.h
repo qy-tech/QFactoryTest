@@ -5,9 +5,9 @@
 #ifndef EASYMEDIA_FILTER_H_
 #define EASYMEDIA_FILTER_H_
 
-#include <memory>
-
 #include <stdarg.h>
+
+#include <memory>
 
 #include "control.h"
 #include "media_reflector.h"
@@ -20,23 +20,23 @@ DECLARE_FACTORY(Filter)
 // T must be the final class type exposed to user
 DECLARE_REFLECTOR(Filter)
 
-#define DEFINE_FILTER_FACTORY(REAL_PRODUCT, FINAL_EXPOSE_PRODUCT)              \
-  DEFINE_MEDIA_CHILD_FACTORY(REAL_PRODUCT, REAL_PRODUCT::GetFilterName(),      \
-                             FINAL_EXPOSE_PRODUCT, Filter)                     \
-  DEFINE_MEDIA_CHILD_FACTORY_EXTRA(REAL_PRODUCT)                               \
+#define DEFINE_FILTER_FACTORY(REAL_PRODUCT, FINAL_EXPOSE_PRODUCT)         \
+  DEFINE_MEDIA_CHILD_FACTORY(REAL_PRODUCT, REAL_PRODUCT::GetFilterName(), \
+                             FINAL_EXPOSE_PRODUCT, Filter)                \
+  DEFINE_MEDIA_CHILD_FACTORY_EXTRA(REAL_PRODUCT)                          \
   DEFINE_MEDIA_NEW_PRODUCT_BY(REAL_PRODUCT, Filter, GetError() < 0)
 
-#define DEFINE_COMMON_FILTER_FACTORY(REAL_PRODUCT)                             \
+#define DEFINE_COMMON_FILTER_FACTORY(REAL_PRODUCT) \
   DEFINE_FILTER_FACTORY(REAL_PRODUCT, Filter)
 
 class MediaBuffer;
 class _API Filter {
-public:
+ public:
   virtual ~Filter() = 0;
-  static const char *GetFilterName() { return nullptr; }
+  static const char* GetFilterName() { return nullptr; }
   // sync call, input and output must be valid
   virtual int Process(std::shared_ptr<MediaBuffer> input,
-                      std::shared_ptr<MediaBuffer> &output);
+                      std::shared_ptr<MediaBuffer>& output);
   // some filter may output many buffers with one input.
   // sync or async safe call, depends on specific filter.
   virtual int SendInput(std::shared_ptr<MediaBuffer> input);
@@ -48,6 +48,6 @@ public:
   DECLARE_PART_FINAL_EXPOSE_PRODUCT(Filter)
 };
 
-} // namespace easymedia
+}  // namespace easymedia
 
-#endif // #ifndef EASYMEDIA_FILTER_H_
+#endif  // #ifndef EASYMEDIA_FILTER_H_

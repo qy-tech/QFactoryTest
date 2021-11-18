@@ -4,18 +4,19 @@
 #include <QThread>
 
 class CpuInfoReadThread : public QThread {
-    Q_OBJECT
-public:
-    CpuInfoReadThread(QObject* parent = 0);
-    virtual void run() override;
+  Q_OBJECT
+ public:
+  CpuInfoReadThread(QObject* parent = 0);
+  virtual void run() override;
 
-private:
-    QString temperaturePath = tr("/sys/class/thermal/thermal_zone0/temp");
-    QString cpuFreqPath = tr("/sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq");
-    float readFile(QString path);
+ private:
+  QString temperaturePath = tr("/sys/class/thermal/thermal_zone0/temp");
+  QString cpuFreqPath =
+      tr("/sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq");
+  float readFile(QString path);
 
-signals:
-    void updateCpuInfo(float temperature, float cpuFreq);
+ signals:
+  void updateCpuInfo(float temperature, float cpuFreq);
 };
 
-#endif // CPUINFOREADTHREAD_H
+#endif  // CPUINFOREADTHREAD_H

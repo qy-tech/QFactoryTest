@@ -1,9 +1,9 @@
 #ifndef PRINTTHREAD_H
 #define PRINTTHREAD_H
 
-#include <QThread>
 #include <QDebug>
 #include <QImage>
+#include <QThread>
 
 #define PICW 672
 #define PICH 384
@@ -16,37 +16,35 @@
 #define CMD_IO_PRINT_PAPER_FEED _IOW('L', 5, unsigned long)
 #define ENABLE_MEDIA 0
 
-class PrintThread : public QThread
-{
-    Q_OBJECT
-    
-public:
-    PrintThread(QObject *parent=nullptr);
+class PrintThread : public QThread {
+  Q_OBJECT
 
-signals:
-    void nopaperSig();
-    void errorSig();
-    void finishedSig();
+ public:
+  PrintThread(QObject* parent = nullptr);
 
-protected:
-    void run() ;
+ signals:
+  void nopaperSig();
+  void errorSig();
+  void finishedSig();
 
-private:
-    bool toGray();
-    bool printerTest();
-    QString printerPath = "/dev/printer_device_node";
+ protected:
+  void run();
 
-    float matriPicGlobal[PICH][PICW];
-    float matriPicDealGlobal[PICH][PICW];
-    float integralImageSumArr[PICW * PICH];
-    float progressPicDeal;
-    int qimageRGB[PICH][PICW][3];
-    uint8_t dotBuffer[PICW][PICH];
-    int fd;
+ private:
+  bool toGray();
+  bool printerTest();
+  QString printerPath = "/dev/printer_device_node";
 
-    bool printRunningFlag=false;
-    bool printTestResult=false;
+  float matriPicGlobal[PICH][PICW];
+  float matriPicDealGlobal[PICH][PICW];
+  float integralImageSumArr[PICW * PICH];
+  float progressPicDeal;
+  int qimageRGB[PICH][PICW][3];
+  uint8_t dotBuffer[PICW][PICH];
+  int fd;
 
+  bool printRunningFlag = false;
+  bool printTestResult = false;
 };
 
-#endif // PRINTTHREAD_H
+#endif  // PRINTTHREAD_H

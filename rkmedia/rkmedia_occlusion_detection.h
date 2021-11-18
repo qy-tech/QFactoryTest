@@ -23,16 +23,16 @@ typedef struct rkOD_EVENT_S {
 
 /* the attribute of the Occlusion Detection algorithm */
 typedef struct rkALGO_OD_ATTR_S {
-  IMAGE_TYPE_E enImageType; // the type of input image
+  IMAGE_TYPE_E enImageType;  // the type of input image
   RK_U32 u32Width;
   RK_U32 u32Height;
-  RK_U16 u16RoiCnt; // RW; Range:[0, ALGO_OD_ROI_RET_MAX].
+  RK_U16 u16RoiCnt;  // RW; Range:[0, ALGO_OD_ROI_RET_MAX].
   RECT_S stRoiRects[ALGO_OD_ROI_RET_MAX];
-  RK_U16 u16Sensitivity; // value 0(sys default) or [1 - 100].
+  RK_U16 u16Sensitivity;  // value 0(sys default) or [1 - 100].
 } ALGO_OD_ATTR_S;
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // #ifndef __RKMEDIA_OCCLUSION_DETECTION_
+#endif  // #ifndef __RKMEDIA_OCCLUSION_DETECTION_

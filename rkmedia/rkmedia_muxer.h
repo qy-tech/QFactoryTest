@@ -57,10 +57,10 @@ typedef struct rkMUXER_EVENT_INFO_S {
 
 /* Muxer event callback function */
 typedef RK_S32 (*MUXER_REQUEST_EVENT_CB)(
-    RK_VOID *pHandle, const MUXER_EVENT_INFO_S *pstEventInfo);
+    RK_VOID* pHandle, const MUXER_EVENT_INFO_S* pstEventInfo);
 /* Muxer request file name callback function */
-typedef int (*MUXER_REQUEST_FILE_NAME_CB)(RK_VOID *pHandle, RK_U32 u32FileCnt,
-                                          RK_CHAR **file_name);
+typedef int (*MUXER_REQUEST_FILE_NAME_CB)(RK_VOID* pHandle, RK_U32 u32FileCnt,
+                                          RK_CHAR** file_name);
 
 typedef enum rkMUXER_SPLIT_TYPE_E {
   MUXER_SPLIT_TYPE_TIME = 0, /* split when time reaches */
@@ -77,13 +77,13 @@ typedef enum rkMUXER_SPLIT_NAME_TYPE_E {
 typedef struct rkMUXER_NAME_AUTO_S {
   RK_BOOL bTimeStampEnable; /* Auto name with time stamp */
   RK_U16 u16StartIdx;
-  RK_CHAR *pcPrefix;
-  RK_CHAR *pcBaseDir;
+  RK_CHAR* pcPrefix;
+  RK_CHAR* pcBaseDir;
 } MUXER_NAME_AUTO_S;
 
 typedef struct rkMUXER_NAME_CALLBCAK_S {
   MUXER_REQUEST_FILE_NAME_CB pcbRequestFileNames;
-  RK_VOID *pCallBackHandle;
+  RK_VOID* pCallBackHandle;
 } MUXER_NAME_CALLBCAK_S;
 
 /* muxer split attribute param */
@@ -112,8 +112,8 @@ typedef enum rkMUXER_MODE_E {
 } MUXER_MODE_E;
 
 typedef struct rkMUXER_VIDEO_STREAM_PARAM_S {
-  CODEC_TYPE_E enCodecType; // the type of encodec
-  IMAGE_TYPE_E enImageType; // the type of input image
+  CODEC_TYPE_E enCodecType;  // the type of encodec
+  IMAGE_TYPE_E enImageType;  // the type of input image
   RK_U32 u32Width;
   RK_U32 u32Height;
   RK_U32 u32BitRate;
@@ -123,8 +123,8 @@ typedef struct rkMUXER_VIDEO_STREAM_PARAM_S {
 } MUXER_VIDEO_STREAM_PARAM_S;
 
 typedef struct rkMUXER_AUDIO_STREAM_PARAM_S {
-  CODEC_TYPE_E enCodecType;  // the type of encodec
-  SAMPLE_FORMAT_E enSampFmt; // audio sample formate
+  CODEC_TYPE_E enCodecType;   // the type of encodec
+  SAMPLE_FORMAT_E enSampFmt;  // audio sample formate
   RK_U32 u32Channels;
   RK_U32 u32SampleRate;
   RK_U32 u32NbSamples;
@@ -134,7 +134,7 @@ typedef struct rkMUXER_CHN_ATTR_S {
   MUXER_MODE_E enMode;
   MUXER_TYPE_E enType;
   union {
-    RK_CHAR *pcOutputFile;
+    RK_CHAR* pcOutputFile;
     MUXER_SPLIT_ATTR_S stSplitAttr;
   };
 
@@ -148,4 +148,4 @@ typedef struct rkMUXER_CHN_ATTR_S {
 }
 #endif
 
-#endif // #ifndef __RKMEDIA_VIDEO_MUXER_
+#endif  // #ifndef __RKMEDIA_VIDEO_MUXER_

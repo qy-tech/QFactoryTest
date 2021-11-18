@@ -3,14 +3,14 @@
 #include <QThread>
 
 class StressTestThread : public QThread {
-    Q_OBJECT
-public:
-    StressTestThread(QObject* parent = 0);
+  Q_OBJECT
+ public:
+  StressTestThread(QObject* parent = 0);
 
-protected:
-    void run() override;
-signals:
-    void stressTestCompleted();
+ protected:
+  void run() override;
+ signals:
+  void stressTestCompleted();
 };
 
-#endif // STRESSTESTTHREAD_H
+#endif  // STRESSTESTTHREAD_H

@@ -5,27 +5,27 @@
 #ifndef EASYMEDIA_CONTROL_H_
 #define EASYMEDIA_CONTROL_H_
 
-#include "image.h"
 #include <stdint.h>
 
+#include "image.h"
 #include "rknn_user.h"
 
 namespace easymedia {
 
 typedef struct {
-  const char *name;
+  const char* name;
   uint64_t value;
 } DRMPropertyArg;
 
 typedef struct {
   unsigned long int sub_request;
   int size;
-  void *arg;
+  void* arg;
 } SubRequest;
 
 typedef struct {
   size_t size;
-  void *data;
+  void* data;
 } UserPicArg;
 
 typedef struct {
@@ -190,6 +190,6 @@ enum {
 
 };
 
-} // namespace easymedia
+}  // namespace easymedia
 
-#endif // #ifndef EASYMEDIA_CONTROL_H_
+#endif  // #ifndef EASYMEDIA_CONTROL_H_

@@ -16,7 +16,7 @@ typedef enum rk_AI_LAYOUT_E {
 } AI_LAYOUT_E;
 
 typedef struct rkAI_CHN_ATTR_S {
-  RK_CHAR *pcAudioNode;
+  RK_CHAR* pcAudioNode;
   SAMPLE_FORMAT_E enSampleFormat;
   RK_U32 u32Channels;
   RK_U32 u32SampleRate;
@@ -49,4 +49,4 @@ typedef struct rkAI_RECORDVQE_CONFIG_S {
 #ifdef __cplusplus
 }
 #endif
-#endif // #ifndef __RKMEDIA_AI_
+#endif  // #ifndef __RKMEDIA_AI_

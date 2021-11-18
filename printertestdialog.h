@@ -2,6 +2,7 @@
 #define PRINTERTESTDIALOG_H
 
 #include <QDialog>
+
 #include "printthread.h"
 
 #define PICW 672
@@ -20,42 +21,42 @@ class PrinterTestDialog;
 }
 
 class PrinterTestDialog : public QDialog {
-    Q_OBJECT
+  Q_OBJECT
 
-public:
-    explicit PrinterTestDialog(QWidget* parent = nullptr);
-    ~PrinterTestDialog();
+ public:
+  explicit PrinterTestDialog(QWidget* parent = nullptr);
+  ~PrinterTestDialog();
 
-private slots:
-    void on_btnPrinter_clicked();
-    void on_okButton_clicked();
-    void on_failedButton_clicked();
+ private slots:
+  void on_btnPrinter_clicked();
+  void on_okButton_clicked();
+  void on_failedButton_clicked();
 
-public slots:
-    void nopaperSlot();
-    void errorSlot();
-    void finishedSlot();
+ public slots:
+  void nopaperSlot();
+  void errorSlot();
+  void finishedSlot();
 
-private:
-    Ui::PrinterTestDialog* ui;
+ private:
+  Ui::PrinterTestDialog* ui;
 
-    QString printerPath = "/dev/printer_device_node";
+  QString printerPath = "/dev/printer_device_node";
 
-    //bool printerTest();
-    //bool toGray();
+  // bool printerTest();
+  // bool toGray();
 
-    float matriPicGlobal[PICH][PICW];
-    float matriPicDealGlobal[PICH][PICW];
-    float integralImageSumArr[PICW * PICH];
-    float progressPicDeal;
-    int qimageRGB[PICH][PICW][3];
-    uint8_t dotBuffer[PICW][PICH];
-    int fd;
+  float matriPicGlobal[PICH][PICW];
+  float matriPicDealGlobal[PICH][PICW];
+  float integralImageSumArr[PICW * PICH];
+  float progressPicDeal;
+  int qimageRGB[PICH][PICW][3];
+  uint8_t dotBuffer[PICW][PICH];
+  int fd;
 
-    bool printRunningFlag=false;
-    bool printTestResult=false;
+  bool printRunningFlag = false;
+  bool printTestResult = false;
 
-    PrintThread *th_print;
+  PrintThread* th_print;
 };
 
-#endif // PRINTERTESTDIALOG_H
+#endif  // PRINTERTESTDIALOG_H

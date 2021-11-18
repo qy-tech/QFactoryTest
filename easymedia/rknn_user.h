@@ -18,8 +18,8 @@
 #define RKMEDIA_ROCKX_LANDMARK_MAX_COUNT (128)
 
 using RknnCallBack =
-    std::add_pointer<void(void *handler, int type, void *ptr, int size)>::type;
-using RknnHandler = std::add_pointer<void *>::type;
+    std::add_pointer<void(void* handler, int type, void* ptr, int size)>::type;
+using RknnHandler = std::add_pointer<void*>::type;
 
 typedef struct Rect {
   int left;
@@ -64,9 +64,9 @@ typedef struct {
 } RkmediaRockxFaceLandmark;
 
 typedef struct {
-    int count;
-    RkmediaPoint points[32];
-    float score[32];
+  int count;
+  RkmediaPoint points[32];
+  float score[32];
 } RkmediaRockxKeypoints;
 
 typedef struct {
@@ -130,4 +130,4 @@ typedef struct {
   };
 } RknnResult;
 
-#endif // #ifndef EASYMEDIA_RKNN_USER_H_
+#endif  // #ifndef EASYMEDIA_RKNN_USER_H_

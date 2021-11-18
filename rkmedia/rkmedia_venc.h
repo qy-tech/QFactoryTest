@@ -55,33 +55,32 @@ typedef enum rkVENC_NALU_TYPE_E {
 
 /* the attribute of h264e cbr*/
 typedef struct rkVENC_H264_CBR_S {
-
-  RK_U32 u32Gop; // RW; Range:[1, 65536]; the interval of I Frame.
+  RK_U32 u32Gop;  // RW; Range:[1, 65536]; the interval of I Frame.
   RK_U32 u32SrcFrameRateNum;
   RK_U32 u32SrcFrameRateDen;
   RK_FR32 fr32DstFrameRateNum;
   RK_FR32 fr32DstFrameRateDen;
-  RK_U32 u32BitRate; // RW; Range:[2, 614400]; average bitrate
+  RK_U32 u32BitRate;  // RW; Range:[2, 614400]; average bitrate
 } VENC_H264_CBR_S;
 
 /* the attribute of h264e vbr*/
 typedef struct rkVENC_H264_VBR_S {
-  RK_U32 u32Gop; // RW; Range:[1, 65536]; the interval of ISLICE.
+  RK_U32 u32Gop;  // RW; Range:[1, 65536]; the interval of ISLICE.
   RK_U32 u32SrcFrameRateNum;
   RK_U32 u32SrcFrameRateDen;
   RK_FR32 fr32DstFrameRateNum;
   RK_FR32 fr32DstFrameRateDen;
-  RK_U32 u32MaxBitRate; // RW; Range:[2, 614400];the max bitrate
+  RK_U32 u32MaxBitRate;  // RW; Range:[2, 614400];the max bitrate
 } VENC_H264_VBR_S;
 
 /* the attribute of h264e vbr*/
 typedef struct rkVENC_H264_AVBR_S {
-  RK_U32 u32Gop; // RW; Range:[1, 65536]; the interval of ISLICE.
+  RK_U32 u32Gop;  // RW; Range:[1, 65536]; the interval of ISLICE.
   RK_U32 u32SrcFrameRateNum;
   RK_U32 u32SrcFrameRateDen;
   RK_FR32 fr32DstFrameRateNum;
   RK_FR32 fr32DstFrameRateDen;
-  RK_U32 u32MaxBitRate; // RW; Range:[2, 614400];the max bitrate
+  RK_U32 u32MaxBitRate;  // RW; Range:[2, 614400];the max bitrate
 } VENC_H264_AVBR_S;
 
 /* the attribute of mjpege cbr*/
@@ -90,7 +89,7 @@ typedef struct rkVENC_MJPEG_CBR_S {
   RK_U32 u32SrcFrameRateDen;
   RK_FR32 fr32DstFrameRateNum;
   RK_FR32 fr32DstFrameRateDen;
-  RK_U32 u32BitRate; // RW; Range:[2000, 98000000]; average bitrate
+  RK_U32 u32BitRate;  // RW; Range:[2000, 98000000]; average bitrate
 } VENC_MJPEG_CBR_S;
 
 /* the attribute of mjpege vbr*/
@@ -99,7 +98,7 @@ typedef struct rkVENC_MJPEG_VBR_S {
   RK_U32 u32SrcFrameRateDen;
   RK_FR32 fr32DstFrameRateNum;
   RK_FR32 fr32DstFrameRateDen;
-  RK_U32 u32BitRate; // RW; Range:[2000, 98000000]; average bitrate
+  RK_U32 u32BitRate;  // RW; Range:[2000, 98000000]; average bitrate
 } VENC_MJPEG_VBR_S;
 
 typedef struct rkVENC_H264_CBR_S VENC_H265_CBR_S;
@@ -142,16 +141,16 @@ typedef enum rkVENC_ROTATION_E {
 
 /*the attribute of jpege*/
 typedef struct rkVENC_ATTR_JPEG_S {
-  RK_U32 u32ZoomWidth;  // Zoom to specified width
-  RK_U32 u32ZoomHeight; // Zoom to specified height
+  RK_U32 u32ZoomWidth;   // Zoom to specified width
+  RK_U32 u32ZoomHeight;  // Zoom to specified height
   RK_U32 u32ZoomVirWidth;
   RK_U32 u32ZoomVirHeight;
 } VENC_ATTR_JPEG_S;
 
 /*the attribute of mjpege*/
 typedef struct rkVENC_ATTR_MJPEG_S {
-  RK_U32 u32ZoomWidth;  // Zoom to specified width
-  RK_U32 u32ZoomHeight; // Zoom to specified height
+  RK_U32 u32ZoomWidth;   // Zoom to specified width
+  RK_U32 u32ZoomHeight;  // Zoom to specified height
   RK_U32 u32ZoomVirWidth;
   RK_U32 u32ZoomVirHeight;
 } VENC_ATTR_MJPEG_S;
@@ -164,33 +163,31 @@ typedef struct rkVENC_ATTR_H264_S {
 
 /*the attribute of h265e*/
 typedef struct rkVENC_ATTR_H265_S {
-
   // reserved
 } VENC_ATTR_H265_S;
 
 /* the attribute of the Venc*/
 typedef struct rkVENC_ATTR_S {
-
-  CODEC_TYPE_E enType;    // RW; the type of encodec
-  IMAGE_TYPE_E imageType; // the type of input image
-  RK_U32 u32VirWidth;  // stride width, same to buffer_width, must greater than
-                       // width, often set vir_width=(width+15)&(~15)
-  RK_U32 u32VirHeight; // stride height, same to buffer_height, must greater
-                       // than height, often set vir_height=(height+15)&(~15)
-  RK_U32 u32Profile;   // RW;
-                       // H.264:   66: baseline; 77:MP; 100:HP;
-                       // H.265:   default:Main;
-                       // Jpege/MJpege:   default:Baseline
-  RK_BOOL bByFrame;    // RW; Range:[0,1];
-                       // get stream mode is slice mode or frame mode
-  RK_U32 u32PicWidth;  // RW; width of a picture to be encoded, in pixel
-  RK_U32 u32PicHeight; // RW; height of a picture to be encoded, in pixel
+  CODEC_TYPE_E enType;     // RW; the type of encodec
+  IMAGE_TYPE_E imageType;  // the type of input image
+  RK_U32 u32VirWidth;   // stride width, same to buffer_width, must greater than
+                        // width, often set vir_width=(width+15)&(~15)
+  RK_U32 u32VirHeight;  // stride height, same to buffer_height, must greater
+                        // than height, often set vir_height=(height+15)&(~15)
+  RK_U32 u32Profile;    // RW;
+                        // H.264:   66: baseline; 77:MP; 100:HP;
+                        // H.265:   default:Main;
+                        // Jpege/MJpege:   default:Baseline
+  RK_BOOL bByFrame;     // RW; Range:[0,1];
+                        // get stream mode is slice mode or frame mode
+  RK_U32 u32PicWidth;   // RW; width of a picture to be encoded, in pixel
+  RK_U32 u32PicHeight;  // RW; height of a picture to be encoded, in pixel
   VENC_ROTATION_E enRotation;
   union {
-    VENC_ATTR_H264_S stAttrH264e;   // attributes of H264e
-    VENC_ATTR_H265_S stAttrH265e;   // attributes of H265e
-    VENC_ATTR_MJPEG_S stAttrMjpege; // attributes of Mjpeg
-    VENC_ATTR_JPEG_S stAttrJpege;   // attributes of jpeg
+    VENC_ATTR_H264_S stAttrH264e;    // attributes of H264e
+    VENC_ATTR_H265_S stAttrH265e;    // attributes of H265e
+    VENC_ATTR_MJPEG_S stAttrMjpege;  // attributes of Mjpeg
+    VENC_ATTR_JPEG_S stAttrJpege;    // attributes of jpeg
   };
 } VENC_ATTR_S;
 
@@ -205,20 +202,20 @@ typedef struct rkVENC_GOP_ATTR_S {
 
 /* the attribute of the venc chnl*/
 typedef struct rkVENC_CHN_ATTR_S {
-  VENC_ATTR_S stVencAttr;    // the attribute of video encoder
-  VENC_RC_ATTR_S stRcAttr;   // the attribute of rate  ctrl
-  VENC_GOP_ATTR_S stGopAttr; // the attribute of gop
+  VENC_ATTR_S stVencAttr;     // the attribute of video encoder
+  VENC_RC_ATTR_S stRcAttr;    // the attribute of rate  ctrl
+  VENC_GOP_ATTR_S stGopAttr;  // the attribute of gop
 } VENC_CHN_ATTR_S;
 
 /* The param of H264e cbr*/
 typedef struct rkVENC_PARAM_H264_S {
   RK_U32 u32StepQp;
-  RK_U32 u32MaxQp; // RW; Range:[8, 51];the max QP value
-  RK_U32 u32MinQp; // RW; Range:[0, 48]; the min QP value,can not be larger than
-                   // u32MaxQp
-  RK_U32 u32MaxIQp; // RW; max qp for i frame
-  RK_U32 u32MinIQp; // RW; min qp for i frame,can not be larger
-                    // than u32MaxIQp
+  RK_U32 u32MaxQp;   // RW; Range:[8, 51];the max QP value
+  RK_U32 u32MinQp;   // RW; Range:[0, 48]; the min QP value,can not be larger
+                     // than u32MaxQp
+  RK_U32 u32MaxIQp;  // RW; max qp for i frame
+  RK_U32 u32MinIQp;  // RW; min qp for i frame,can not be larger
+                     // than u32MaxIQp
   // RK_S32  s32MaxReEncodeTimes;        /* RW; Range:[0, 3]; Range:max number
   // of re-encode times.*/
 } VENC_PARAM_H264_S;
@@ -226,11 +223,11 @@ typedef struct rkVENC_PARAM_H264_S {
 /* The param of h265e cbr*/
 typedef struct rkVENC_PARAM_H265_S {
   RK_U32 u32StepQp;
-  RK_U32 u32MaxQp; // RW; Range:[8, 51];the max QP value
-  RK_U32 u32MinQp; // RW; Range:[0, 48];the min QP value ,can not be larger than
-                   // u32MaxQp
-  RK_U32 u32MaxIQp; // RW; max qp for i frame
-  RK_U32 u32MinIQp; // RW; min qp for i frame,can not be larger than u32MaxIQp
+  RK_U32 u32MaxQp;   // RW; Range:[8, 51];the max QP value
+  RK_U32 u32MinQp;   // RW; Range:[0, 48];the min QP value ,can not be larger
+                     // than u32MaxQp
+  RK_U32 u32MaxIQp;  // RW; max qp for i frame
+  RK_U32 u32MinIQp;  // RW; min qp for i frame,can not be larger than u32MaxIQp
 
   // RK_S32  s32MaxReEncodeTimes;         /* RW; Range:[0, 3]; Range:max number
   // of re-encode times.*/
@@ -239,17 +236,16 @@ typedef struct rkVENC_PARAM_H265_S {
 
 /* The param of mjpege cbr*/
 typedef struct rkVENC_PARAM_MJPEG_S {
-
 } VENC_PARAM_MJPEG_S;
 
 /* The param of rc*/
 typedef struct rkVENC_RC_PARAM_S {
-  RK_U32 u32ThrdI[RC_TEXTURE_THR_SIZE]; // [0, 255]
-  RK_U32 u32ThrdP[RC_TEXTURE_THR_SIZE]; // [0, 255]
-  RK_U32 u32RowQpDeltaI;                // [0, 10]
-  RK_U32 u32RowQpDeltaP;                // [0, 10]
+  RK_U32 u32ThrdI[RC_TEXTURE_THR_SIZE];  // [0, 255]
+  RK_U32 u32ThrdP[RC_TEXTURE_THR_SIZE];  // [0, 255]
+  RK_U32 u32RowQpDeltaI;                 // [0, 10]
+  RK_U32 u32RowQpDeltaP;                 // [0, 10]
 
-  RK_U32 s32FirstFrameStartQp; // RW; Start QP value of the first frame
+  RK_U32 s32FirstFrameStartQp;  // RW; Start QP value of the first frame
   union {
     VENC_PARAM_H264_S stParamH264;
     VENC_PARAM_H265_S stParamH265;
@@ -259,15 +255,15 @@ typedef struct rkVENC_RC_PARAM_S {
 
 /* the attribute of the roi */
 typedef struct rkVENC_ROI_ATTR_S {
-  RK_U32 u32Index; // RW; Range:[0, 7]; Index of an ROI. The system supports
-                   // indexes ranging from 0 to 7
-  RK_BOOL bEnable; // RW; Range:[0, 1]; Whether to enable this ROI
-  RK_BOOL bAbsQp;  // RW; Range:[0, 1]; QP mode of an ROI.RK_FALSE: relative
-                   // QP.RK_TURE: absolute QP.
-  RK_S32 s32Qp; // RW; Range:[-51, 51]; QP value,only relative mode can QP value
-                // less than 0.
-  RK_BOOL bIntra; // flag of forced intra macroblock
-  RECT_S stRect;  // RW; Region of an ROI
+  RK_U32 u32Index;  // RW; Range:[0, 7]; Index of an ROI. The system supports
+                    // indexes ranging from 0 to 7
+  RK_BOOL bEnable;  // RW; Range:[0, 1]; Whether to enable this ROI
+  RK_BOOL bAbsQp;   // RW; Range:[0, 1]; QP mode of an ROI.RK_FALSE: relative
+                    // QP.RK_TURE: absolute QP.
+  RK_S32 s32Qp;     // RW; Range:[-51, 51]; QP value,only relative mode can QP
+                    // value less than 0.
+  RK_BOOL bIntra;   // flag of forced intra macroblock
+  RECT_S stRect;    // RW; Region of an ROI
 } VENC_ROI_ATTR_S;
 
 #define VENC_RGN_COLOR_NUM 256
@@ -292,14 +288,14 @@ typedef enum rkOSD_REGION_ID_E {
 
 typedef enum rkOSD_PIXEL_FORMAT_E {
   PIXEL_FORMAT_ARGB_8888 = 0,
-  PIXEL_FORMAT_BUTT // butt of enum
+  PIXEL_FORMAT_BUTT  // butt of enum
 } OSD_PIXEL_FORMAT_E;
 
 typedef struct rkBITMAP_S {
   OSD_PIXEL_FORMAT_E enPixelFormat; /* Bitmap's pixel format */
   RK_U32 u32Width;                  /* Bitmap's width */
   RK_U32 u32Height;                 /* Bitmap's height */
-  RK_VOID *pData;                   /* Address of Bitmap's data */
+  RK_VOID* pData;                   /* Address of Bitmap's data */
 } BITMAP_S;
 
 typedef struct rkCOVER_INFO_S {
@@ -310,7 +306,7 @@ typedef struct rkCOVER_INFO_S {
 typedef struct rkOSD_COLOR_PALETTE_BUF_S {
   RK_U32 u32Width;  /* buffer's width */
   RK_U32 u32Height; /* buffer's height */
-  RK_VOID *pIdBuf;  /* buffer of the color palette id */
+  RK_VOID* pIdBuf;  /* buffer of the color palette id */
 } OSD_COLOR_PALETTE_BUF_S;
 
 typedef struct rkOSD_REGION_INFO_S {
@@ -324,11 +320,11 @@ typedef struct rkOSD_REGION_INFO_S {
 } OSD_REGION_INFO_S;
 
 typedef struct rkVENC_JPEG_PARAM_S {
-  RK_U32 u32Qfactor;   // 1-99
-  RK_U8 u8YQt[64];     // useless now
-  RK_U8 u8CbQt[64];    // useless now
-  RK_U8 u8CrQt[64];    // useless now
-  RK_U32 u32MCUPerECS; // useless now
+  RK_U32 u32Qfactor;    // 1-99
+  RK_U8 u8YQt[64];      // useless now
+  RK_U8 u8CbQt[64];     // useless now
+  RK_U8 u8CrQt[64];     // useless now
+  RK_U32 u32MCUPerECS;  // useless now
 } VENC_JPEG_PARAM_S;
 
 typedef struct rkVENC_RESOLUTION_PARAM_S {
@@ -339,12 +335,12 @@ typedef struct rkVENC_RESOLUTION_PARAM_S {
 } VENC_RESOLUTION_PARAM_S;
 
 typedef struct rkVENC_CHN_STATUS_S {
-  RK_U32 u32LeftFrames; // The number of unencoded frames remaining in the input
-                        // buffer.
-  RK_U32 u32TotalFrames; // The capacity of the input buffer.
-  RK_U32 u32LeftPackets; // The number of packets remaining in the output buffer
-                         // that have not been taken.
-  RK_U32 u32TotalPackets; // The capacity of the output buffer.
+  RK_U32 u32LeftFrames;    // The number of unencoded frames remaining in the
+                           // input buffer.
+  RK_U32 u32TotalFrames;   // The capacity of the input buffer.
+  RK_U32 u32LeftPackets;   // The number of packets remaining in the output
+                           // buffer that have not been taken.
+  RK_U32 u32TotalPackets;  // The capacity of the output buffer.
 } VENC_CHN_STATUS_S;
 
 typedef enum rkRC_SUPERFRM_MODE_E {
@@ -371,4 +367,4 @@ typedef struct rkVENC_SUPERFRAME_CFG_S {
 }
 #endif
 
-#endif // #ifndef __RKMEDIA_VENC_
+#endif  // #ifndef __RKMEDIA_VENC_
