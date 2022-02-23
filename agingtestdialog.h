@@ -2,6 +2,7 @@
 #define AGINGTESTDIALOG_H
 
 #include <QDialog>
+#include <QFile>
 
 #include "cpuinforeadthread.h"
 #include "stresstestthread.h"

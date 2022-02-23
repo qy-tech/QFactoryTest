@@ -15,7 +15,6 @@ TPTestDialog::TPTestDialog(QWidget* parent)
     : QDialog(parent), ui(new Ui::TPTestDialog) {
   ui->setupUi(this);
   FactoryTestUtils::windowFullScreen(this);
-  FactoryTestUtils::moveWidgetRightBottom(ui->buttonBox);
 
   pix = QPixmap(FactoryTestUtils::screenWidth, FactoryTestUtils::screenHeight);
   pix.fill(Qt::gray);

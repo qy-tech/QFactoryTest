@@ -10,7 +10,6 @@ TimeTestDialog::TimeTestDialog(QWidget* parent)
   ui->setupUi(this);
 
   FactoryTestUtils::windowFullScreen(this);
-  FactoryTestUtils::moveWidgetRightBottom(ui->buttonBox);
 
   FactoryTestUtils::runCommand("date +%Y%m%d+%T -s \"20211231  23:59:59\"");
 

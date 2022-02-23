@@ -14,7 +14,6 @@ BatteryTestDialog::BatteryTestDialog(QWidget* parent)
     : QDialog(parent), ui(new Ui::BatteryTestDialog) {
   ui->setupUi(this);
   FactoryTestUtils::windowFullScreen(this);
-  FactoryTestUtils::moveWidgetRightBottom(ui->buttonBox);
   QFont ft;
   ft.setPointSize(25);
   ui->label_battery->setFont(ft);
@@ -56,3 +55,5 @@ void BatteryTestDialog::updateBatteryInfo(QString batteryInfo) {
         QString("%1%").arg(batteryInfo.replace("\n", "").replace(" ", "")));
   }
 }
+
+

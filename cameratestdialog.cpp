@@ -25,7 +25,6 @@ CameraTestDialog::CameraTestDialog(QWidget* parent)
   ui->setupUi(this);
   FactoryTestUtils::windowFullScreen(this);
   ui->statuLabel->setVisible(false);
-  // FactoryTestUtils::moveWidgetRightBottom(ui->buttonBox);
   if (!openCamera()) {
     ui->statuLabel->setVisible(true);
   }

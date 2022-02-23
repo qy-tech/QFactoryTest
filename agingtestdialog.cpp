@@ -14,6 +14,8 @@
 #include "factorytestutils.h"
 #include "ui_agingtestdialog.h"
 
+#define STATEFILE "/oem/FactoryTEST_OK"
+
 AgingTestDialog::AgingTestDialog(QWidget* parent)
     : QDialog(parent), ui(new Ui::AgingTestDialog) {
   ui->setupUi(this);
@@ -23,8 +25,8 @@ AgingTestDialog::AgingTestDialog(QWidget* parent)
   ui->label_cpuInfo->setFont(font);
 
   totalTestTime = 0;
-  toggleCamera();
-  // playVideo();
+  // toggleCamera();
+  playVideo();
   // stressapptest();
   cpuInfoReadThread = new CpuInfoReadThread();
   cpuInfoReadThread->start();
@@ -313,6 +315,16 @@ void AgingTestDialog::stopAgingTest() {
   qDebug() << "stopAgingTest";
   isAgingTestRunning = false;
   currentTestCase = "老化测试结束";
+
+  QFile file(STATEFILE);
+  if (file.open(QIODevice::ReadWrite | QIODevice::Text)) {
+    qDebug("write status file ..");
+    file.open(QIODevice::ReadWrite | QIODevice::Text);
+    file.write("OK");
+    file.close();
+    system("sync");
+  }
+
   QMessageBox messagebox;
   messagebox.setText(tr("老化测试结束，是否重启设备"));
   messagebox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);

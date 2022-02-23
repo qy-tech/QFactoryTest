@@ -11,11 +11,12 @@
 #include "tptestdialog.h"
 #include "ui_mainwindow.h"
 
-#define STATEFILE "/oem/FactoryTEST_OK"
+#define FEATURE_STATE_FILE "/oem/feature_test_ok"
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
+  showFullScreen();
   resize(FactoryTestUtils::screenWidth, FactoryTestUtils::screenHeight);
 }
 
@@ -121,31 +122,23 @@ void MainWindow::checkAllTestResult() {
   if (tpResult && lcdResult && keyResult && batteryResult && cameraResult &&
       printResult && rtcResult) {
     qDebug("All item test OK..");
-    QFile file(STATEFILE);
-    if (!file.open(QIODevice::ReadWrite | QIODevice::Text)) {
-      qDebug("write status file failed..");
-      QMessageBox messagebox;
-      messagebox.setText(
-          tr("保存测试状态文件失败!\n"
-             "请检查问题"));
-      messagebox.exec();
-    } else {
-      qDebug("write status file ..");
-      file.open(QIODevice::ReadWrite | QIODevice::Text);
-      file.write("OK");
-      file.close();
-      system("sync");
-      QMessageBox messagebox;
-      messagebox.setText(tr("全部测试成功!!!\n\n 是否进入老化测试"));
-      messagebox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
-      int ret = messagebox.exec();
-      if (ret == QMessageBox::Ok) {
-        startAgingTest();
-      } else {
-        qDebug("ret==QMessageBox::OK");
+    QMessageBox messagebox;
+    messagebox.setText(tr("全部测试成功!!!\n\n 是否进入老化测试"));
+    messagebox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+    int ret = messagebox.exec();
+    if (ret == QMessageBox::Ok) {
+      QFile file(FEATURE_STATE_FILE);
+      if (file.open(QIODevice::ReadWrite | QIODevice::Text)) {
+        file.open(QIODevice::ReadWrite | QIODevice::Text);
+        file.write("OK");
+        file.close();
         system("sync");
-        system("reboot");
       }
+      startAgingTest();
+    } else {
+      qDebug("ret==QMessageBox::OK");
+      system("sync");
+      system("reboot");
     }
   } else {
     qDebug("have item test faild..");

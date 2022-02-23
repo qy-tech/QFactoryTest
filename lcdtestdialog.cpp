@@ -13,7 +13,6 @@ LcdTestDialog::LcdTestDialog(QWidget* parent)
     : QDialog(parent), ui(new Ui::LcdTestDialog) {
   ui->setupUi(this);
   FactoryTestUtils::windowFullScreen(this);
-  FactoryTestUtils::moveWidgetRightBottom(ui->buttonBox);
 
   initColorList();
 }
