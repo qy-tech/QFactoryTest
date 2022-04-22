@@ -22,7 +22,6 @@ SOURCES += \
     agingtestdialog.cpp \
     batteryreadthread.cpp \
     batterytestdialog.cpp \
-    cameratestdialog.cpp \
     cpuinforeadthread.cpp \
     factorytestutils.cpp \
     keyboardtestdialog.cpp \
@@ -34,14 +33,15 @@ SOURCES += \
     stresstestthread.cpp \
     timetestdialog.cpp \
     tptestdialog.cpp \
-    sample_common_isp.c \
     videoplayerthread.cpp
+
+#    sample_common_isp.c \
+#    cameratestdialog.cpp \
 
 HEADERS += \
     agingtestdialog.h \
     batteryreadthread.h \
     batterytestdialog.h \
-    cameratestdialog.h \
     cpuinforeadthread.h \
     factorytestutils.h \
     keyboardtestdialog.h \
@@ -53,35 +53,39 @@ HEADERS += \
     timetestdialog.h \
     tptestdialog.h \
     sample_common.h \
-    rkmedia/rkmedia_adec.h \
-    rkmedia/rkmedia_aenc.h \
-    rkmedia/rkmedia_ai.h \
-    rkmedia/rkmedia_ao.h \
-    rkmedia/rkmedia_api.h \
-    rkmedia/rkmedia_buffer.h \
-    rkmedia/rkmedia_common.h \
-    rkmedia/rkmedia_event.h \
-    rkmedia/rkmedia_move_detection.h \
-    rkmedia/rkmedia_muxer.h \
-    rkmedia/rkmedia_occlusion_detection.h \
-    rkmedia/rkmedia_rga.h \
-    rkmedia/rkmedia_vdec.h \
-    rkmedia/rkmedia_venc.h \
-    rkmedia/rkmedia_vi.h \
-    rkmedia/rkmedia_vmix.h \
-    rkmedia/rkmedia_vo.h \
     videoplayerthread.h
+
+#    cameratestdialog.h \
+
+#    rkmedia/rkmedia_adec.h \
+#    rkmedia/rkmedia_aenc.h \
+#    rkmedia/rkmedia_ai.h \
+#    rkmedia/rkmedia_ao.h \
+#    rkmedia/rkmedia_api.h \
+#    rkmedia/rkmedia_buffer.h \
+#    rkmedia/rkmedia_common.h \
+#    rkmedia/rkmedia_event.h \
+#    rkmedia/rkmedia_move_detection.h \
+#    rkmedia/rkmedia_muxer.h \
+#    rkmedia/rkmedia_occlusion_detection.h \
+#    rkmedia/rkmedia_rga.h \
+#    rkmedia/rkmedia_vdec.h \
+#    rkmedia/rkmedia_venc.h \
+#    rkmedia/rkmedia_vi.h \
+#    rkmedia/rkmedia_vmix.h \
+#    rkmedia/rkmedia_vo.h \
 
 FORMS += \
     agingtestdialog.ui \
     batterytestdialog.ui \
-    cameratestdialog.ui \
     keyboardtestdialog.ui \
     lcdtestdialog.ui \
     mainwindow.ui \
     printertestdialog.ui \
     timetestdialog.ui \
     tptestdialog.ui
+
+#    cameratestdialog.ui \
 
 INCLUDEPATH += ../../host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/rkaiq/uAPI \
                ../../host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/rkaiq/common \
@@ -90,9 +94,12 @@ INCLUDEPATH += ../../host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/rkai
                ../../host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/rkaiq/iq_parser \
                ../../host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/rga \
 
-LIBS+= -L ../../host/arm-buildroot-linux-gnueabihf/sysroot/usr/lib  -leasymedia  -lrockchip_mpp \
+#LIBS+= -L ../../host/arm-buildroot-linux-gnueabihf/sysroot/usr/lib  -leasymedia  -lrockchip_mpp \
+#                        -lrga \
+#                        -lrkaiq \
+
+LIBS+= -L ../../host/arm-buildroot-linux-gnueabihf/sysroot/usr/lib -lrockchip_mpp \
                         -lrga \
-                        -lrkaiq \
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

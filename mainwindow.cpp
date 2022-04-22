@@ -2,7 +2,7 @@
 
 #include "agingtestdialog.h"
 #include "batterytestdialog.h"
-#include "cameratestdialog.h"
+//#include "cameratestdialog.h"
 #include "factorytestutils.h"
 #include "keyboardtestdialog.h"
 #include "lcdtestdialog.h"
@@ -58,14 +58,14 @@ void MainWindow::on_btn_lcd_test_clicked() {
 }
 
 void MainWindow::on_btn_camera_test_clicked() {
-  CameraTestDialog dialog;
-  int i = dialog.exec();
-  qDebug("CameraTestDialog result = %d", i);
-  setWidgetColor(ui->btn_camera_test, i);
-  if (i == 1) {
-    cameraResult = true;
-    checkAllTestResult();
-  }
+//  CameraTestDialog dialog;
+//  int i = dialog.exec();
+//  qDebug("CameraTestDialog result = %d", i);
+//  setWidgetColor(ui->btn_camera_test, i);
+//  if (i == 1) {
+//    cameraResult = true;
+//    checkAllTestResult();
+//  }
 }
 
 void MainWindow::on_btn_printer_test_clicked() {

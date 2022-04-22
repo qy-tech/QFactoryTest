@@ -75,7 +75,7 @@ class AgingTestDialog : public QDialog {
  public slots:
   void updateCpuInfo(float temp, float cpuFreq);
   void onVideoPlayCompleted();
-  void onCameraTimeOut();
+//  void onCameraTimeOut();
   void onStressTestCompleted();
 };
 
