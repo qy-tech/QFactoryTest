@@ -72,3 +72,4 @@ Thumbs.db
 *.exe
 .qt_for_python/
 QtFactoryTest
+.vscode/
